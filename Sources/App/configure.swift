@@ -11,7 +11,7 @@ public func configure(_ app: Application) throws {
         hostname: Environment.get("DATABASE_HOST") ?? "localhost",
         port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? PostgresConfiguration.ianaPortNumber,
         username: Environment.get("DATABASE_USERNAME") ?? "ubuntu",
-        password: Environment.get("DATABASE_PASSWORD") ?? "",
+        password: Environment.get("DATABASE_PASSWORD") ?? "passw0rd",
         database: Environment.get("DATABASE_NAME") ?? "vapordb"
     ), as: .psql)
     
