@@ -8,14 +8,15 @@ public func configure(_ app: Application) throws {
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
     app.databases.use(.postgres(
-        hostname: Environment.get("DATABASE_HOST") ?? "localhost",
-        port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? PostgresConfiguration.ianaPortNumber,
-        username: Environment.get("DATABASE_USERNAME") ?? "ubuntu",
-        password: Environment.get("DATABASE_PASSWORD") ?? "passw0rd",
-        database: Environment.get("DATABASE_NAME") ?? "vapordb"
+        hostname: Environment.get("localhost") ?? "localhost",
+        port: Environment.get("5432").flatMap(Int.init(_:)) ?? PostgresConfiguration.ianaPortNumber,
+        username: Environment.get("ubuntu") ?? "ubuntu",
+        password: Environment.get("passw0rd") ?? "passw0rd",
+        database: Environment.get("vapordb") ?? "vapordb"
     ), as: .psql)
     
     print(app.databases)
+    
     app.migrations.add(CreateTodo())
     app.migrations.add(TaskMigration())
 
