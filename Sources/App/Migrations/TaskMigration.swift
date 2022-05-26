@@ -17,16 +17,24 @@ struct TaskMigration: Migration {
             .case("done")
             .create()
         
-        return database.enum("status").read() // 데이터 타입으로 사용
-            .flatMap { status in
-            database.schema(Task.schema) // SchemaBuilder 생성
-                .id()
-                .field("title", .string, .required) // 필드 추가(이름,데이터타입,제약)
-                .field("status", status, .required)
-                .field("comment", .string)
-                .field("created_date", .datetime, .required)
-                .create() // Table or Collection 생성
-        }
+        return database.schema(Task.schema)
+            .id()
+            .field("title", .string, .required) // 필드 추가(이름,데이터타입,제약)
+            .field("status", status, .required)
+            .field("comment", .string)
+            .field("created_date", .datetime, .required)
+            .create() // Table or Collection 생성
+        
+//        return database.enum("status").read() // 데이터 타입으로 사용
+//            .flatMap { status in
+//            database.schema(Task.schema) // SchemaBuilder 생성
+//                .id()
+//                .field("title", .string, .required) // 필드 추가(이름,데이터타입,제약)
+//                .field("status", status, .required)
+//                .field("comment", .string)
+//                .field("created_date", .datetime, .required)
+//                .create() // Table or Collection 생성
+//        }
     }
     
     // prepare 변화를 되돌림
