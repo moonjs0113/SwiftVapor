@@ -20,7 +20,7 @@ struct TaskMigration: Migration {
         return database.schema(Task.schema)
             .id()
             .field("title", .string, .required) // 필드 추가(이름,데이터타입,제약)
-            .field("status", status, .required)
+            .field("status", .string, .required)
             .field("comment", .string)
             .field("created_date", .datetime, .required)
             .create() // Table or Collection 생성
