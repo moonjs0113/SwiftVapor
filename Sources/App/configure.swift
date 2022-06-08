@@ -21,6 +21,7 @@ public func configure(_ app: Application) throws {
     //        database: Environment.get("vapordb") ?? "vapordb"
     //    ), as: .psql)
     
+    app.migrations.add(CreateMovie())
     app.migrations.add(CreateTodo())
     app.migrations.add(TaskMigration())
     
