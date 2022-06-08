@@ -9,8 +9,8 @@ public func configure(_ app: Application) throws {
     
     app.databases.use(.postgres(hostname: "localhost",
                                 port: 5432,
-                                username: "postgres",
-                                password: "",
+                                username: "ubuntu",
+                                password: "passw0rd",
                                 database: "vapordb"), as: .psql)
     
     //    app.databases.use(.postgres(
