@@ -9,6 +9,20 @@ func routes(_ app: Application) throws {
     app.get("hello") { req -> String in
         return "Hello, world!"
     }
+    
+    app.get("path") { req -> String in
+        let directoryString = DirectoryConfiguration.detect().resourcesDirectory
+        return directoryString
+    }
+    
+    
+//    for index in 1..<19 {
+//        app.get("flatfish_sashimi#\(index).mp4") { req -> Data in
+//
+//            return
+//        }
+//    }
+    
 
     // /movies
     app.get("movies") { req in
