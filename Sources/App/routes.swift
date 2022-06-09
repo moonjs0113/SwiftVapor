@@ -31,6 +31,16 @@ func routes(_ app: Application) throws {
     }
     
     
+    app.get("testVideo") { req -> EventLoopFuture<Response> in
+        let directoryURL = DirectoryConfiguration.detect().publicDirectory + "testVideo.mov"
+        return req.fileio.collectFile(at: directoryURL).map { biteBuffer in
+            let body = Response.Body(buffer: biteBuffer)
+            let response = Response(status: .ok, version: .http1_1, headers: .init(), body: body)
+            return response
+        }
+    }
+    
+    
 //    for index in 1..<19 {
 //        app.get("flatfish_sashimi#\(index).mp4") { req -> Data in
 //
