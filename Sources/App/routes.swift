@@ -10,8 +10,23 @@ func routes(_ app: Application) throws {
         return "Hello, world!"
     }
     
-    app.get("path") { req -> String in
+    app.get("resourcesPath") { req -> String in
         let directoryString = DirectoryConfiguration.detect().resourcesDirectory
+        return directoryString
+    }
+    
+    app.get("publicPath") { req -> String in
+        let directoryString = DirectoryConfiguration.detect().publicDirectory
+        return directoryString
+    }
+    
+    app.get("viewsPath") { req -> String in
+        let directoryString = DirectoryConfiguration.detect().viewsDirectory
+        return directoryString
+    }
+    
+    app.get("workingPath") { req -> String in
+        let directoryString = DirectoryConfiguration.detect().workingDirectory
         return directoryString
     }
     
