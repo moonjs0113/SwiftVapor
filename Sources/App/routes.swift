@@ -40,14 +40,16 @@ func routes(_ app: Application) throws {
 //    }
     app.get("testVideo.mp4") { req -> Response in
         let directoryURL = DirectoryConfiguration.detect().publicDirectory + "testVideo.mp4"
-        let fileUrl = URL(fileURLWithPath: directoryURL)
-        do {
-            let data = try Data(contentsOf: fileUrl)
-            let body = Response.Body(data: data)
-            return Response(status: .ok, version: .http1_1, headers: .init(), body: body)
-        } catch {
-            return Response(status: .ok, version: .http1_1, headers: .init(), body: .empty)
-        }
+        return req.fileio.streamFile(at: directoryURL, mediaType: .multipart)
+//        let fileUrl = URL(fileURLWithPath: directoryURL)
+//        do {
+//            let data = try Data(contentsOf: fileUrl)
+//            let body = Response.Body(data: data)
+//
+//            return Response(status: .ok, version: .http1_1, headers: .init(), body: body)
+//        } catch {
+//            return Response(status: .ok, version: .http1_1, headers: .init(), body: .empty)
+//        }
         
     }
     
