@@ -30,13 +30,21 @@ func routes(_ app: Application) throws {
         return directoryString
     }
     
-    app.get("testVideo.mov") { req -> EventLoopFuture<Response> in
-        let directoryURL = DirectoryConfiguration.detect().publicDirectory + "testVideo.mov"
-        let fileUrl = URL(fileURLWithPath: directoryURL)
-//        let data = Data(contentsOf: fileUrl)
-        return req.byteBufferAllocator.buffer(data: Data(contentsOf: fileUrl))
-        
-        
+//    app.get("testVideo.mov") { req -> EventLoopFuture<Response> in
+//        let directoryURL = DirectoryConfiguration.detect().publicDirectory + "testVideo.mov"
+//        let fileUrl = URL(fileURLWithPath: directoryURL)
+////        let data = Data(contentsOf: fileUrl)
+//        return req.byteBufferAllocator.buffer(data: Data(contentsOf: fileUrl))
+//
+//
+//    }
+    app.get("testVideo.mp4") { req -> EventLoopFuture<Response> in
+        let directoryURL = DirectoryConfiguration.detect().publicDirectory + "testVideo.mp4"
+        return req.fileio.collectFile(at: directoryURL).map { biteBuffer in
+            let body = Response.Body(buffer: biteBuffer)
+            let response = Response(status: .ok, version: .http1_1, headers: .init(), body: body)
+            return response
+        }
     }
     
     app.get("testVideo") { req -> EventLoopFuture<Response> in
