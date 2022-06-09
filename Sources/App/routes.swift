@@ -30,6 +30,14 @@ func routes(_ app: Application) throws {
         return directoryString
     }
     
+    app.get("testVideo.mov") { req -> EventLoopFuture<Response> in
+        let directoryURL = DirectoryConfiguration.detect().publicDirectory + "testVideo.mov"
+        let fileUrl = URL(fileURLWithPath: directoryURL)
+//        let data = Data(contentsOf: fileUrl)
+        return req.byteBufferAllocator.buffer(data: Data(contentsOf: fileUrl))
+        
+        
+    }
     
     app.get("testVideo") { req -> EventLoopFuture<Response> in
         let directoryURL = DirectoryConfiguration.detect().publicDirectory + "testVideo.mov"
