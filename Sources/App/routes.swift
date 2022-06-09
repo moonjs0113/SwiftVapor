@@ -38,13 +38,17 @@ func routes(_ app: Application) throws {
 //
 //
 //    }
-    app.get("testVideo.mp4") { req -> EventLoopFuture<Response> in
+    app.get("testVideo.mp4") { req -> Response in
         let directoryURL = DirectoryConfiguration.detect().publicDirectory + "testVideo.mp4"
-        return req.fileio.collectFile(at: directoryURL).map { biteBuffer in
-            let body = Response.Body(buffer: biteBuffer)
-            let response = Response(status: .ok, version: .http1_1, headers: .init(), body: body)
-            return response
+        let fileUrl = URL(fileURLWithPath: directoryURL)
+        do {
+            let data = try Data(contentsOf: fileUrl)
+            let body = Response.Body(data: data)
+            return Response(status: .ok, version: .http1_1, headers: .init(), body: body)
+        } catch {
+            return Response(status: .ok, version: .http1_1, headers: .init(), body: .empty)
         }
+        
     }
     
     app.get("testVideo") { req -> EventLoopFuture<Response> in
