@@ -37,7 +37,6 @@ struct TaskController: RouteCollection {
         
         return Task.query(on: req.db).filter(\.$id == uuid).first()
             .unwrap(or: Abort(.badRequest,reason: "UUID: \(uuid) Not Found"))
-        
 //        return Task.find(uuid, on: req.db)
 //            .unwrap(or: Abort(.badRequest, reason: "UUID: \(uuid) Not Found"))
 //            .flatMapThrowing { try TaskAPIModel($0) }
@@ -62,7 +61,7 @@ struct TaskController: RouteCollection {
             throw Abort(.badRequest, reason: "Invalid parameter")
         }
         
-        return Task.find(uuid, on: req.db)//req.parameters.get("id"), on: req.db)
+        return Task.find(req.parameters.get("id"), on: req.db)//req.parameters.get("id"), on: req.db)
             .unwrap(or: Abort(.badRequest, reason: "UUID: \(uuid) Not Found"))
             .flatMap {
                 $0.delete(on: req.db)
