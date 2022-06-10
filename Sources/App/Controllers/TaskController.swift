@@ -12,7 +12,7 @@ import Vapor
 struct TaskController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let tasks = routes.grouped("tasks")
-        tasks.get(use: self.showAll) // GET /tasks
+        tasks.get("allTask", use: self.showAll) // GET /tasks/allTask
         tasks.post(use: self.create) // POST /tasks
         tasks.group(":id") { task in // :id - Dynamic Parameter
             tasks.delete(use: self.delete) // DELETE /tasks/:id
