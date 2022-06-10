@@ -5,7 +5,7 @@
 //  Created by Moon Jongseek on 2022/06/10.
 //
 
-import Foundation
+import Fluent
 import Vapor
 
 struct CourseController: RouteCollection {
@@ -15,6 +15,7 @@ struct CourseController: RouteCollection {
         course.post(use: self.createCourse)
         course.group(":id") { courseID in
             courseID.delete(use: self.delete)
+            courseID.get(use: self.getCourseInfo)
         }
     }
     
@@ -35,4 +36,15 @@ struct CourseController: RouteCollection {
             }
             .transform(to: .ok)
     }
+    
+    func getCourseInfo(req: Request) throws -> EventLoopFuture<Course> {
+        guard let courseName = req.parameters.get("id") else {
+            throw Abort(.badRequest, reason: "Failed Get Parameters")
+        }
+        
+        return Course.query(on: req.db).filter(\.$courseName == courseName)
+            .first()
+            .unwrap(or: Abort(.badRequest, reason: "courseName: \(courseName) Not Found"))
+    }
+    
 }
