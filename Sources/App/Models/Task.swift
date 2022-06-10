@@ -61,3 +61,21 @@ extension Task: Validatable {
         validations.add("comment", as: String?.self, required: false)
     }
 }
+
+struct TaskAPIModel: Content {
+    let id: Task.IDValue
+    let title: String
+    var comment: String?
+    var status: Status
+    var createdDate: Date?
+}
+
+extension TaskAPIModel {
+    init(_ task: Task) throws {
+        self.id = try task.requireID()
+        self.title = task.title
+        self.status = task.status
+        self.comment = task.comment
+        self.createdDate = task.createdDate
+    }
+}

@@ -26,7 +26,7 @@ struct TaskController: RouteCollection {
     }
     
     // 단일 조회
-    func getTask(req: Request) throws -> EventLoopFuture<Task> {
+    func getTask(req: Request) throws -> EventLoopFuture<TaskAPIModel> {
         guard let UUIDString = req.parameters.get("id") else {
             throw Abort(.badRequest, reason: "Failed Get id Parameters")
         }
@@ -37,6 +37,7 @@ struct TaskController: RouteCollection {
         
         return Task.find(uuid, on: req.db)
             .unwrap(or: Abort(.badRequest, reason: "UUID: \(uuid) Not Found"))
+            .flatMapThrowing { try TaskAPIModel($0) }
     }
     
     // Request Body를 decoding 하여 DB에 저장
