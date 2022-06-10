@@ -16,12 +16,27 @@ struct TaskController: RouteCollection {
         tasks.post(use: self.create) // POST /tasks
         tasks.group(":id") { task in // :id - Dynamic Parameter
             tasks.delete(use: self.delete) // DELETE /tasks/:id
+            tasks.get(use: getTask)
         }
     }
     
     // 조회
     func showAll(req: Request) throws -> EventLoopFuture<[Task]> {
         return Task.query(on: req.db).all()
+    }
+    
+    // 단일 조회
+    func getTask(req: Request) throws -> EventLoopFuture<Task> {
+        guard let UUIDString = req.parameters.get("id") else {
+            throw Abort(.badRequest, reason: "Failed Get id Parameters")
+        }
+        
+        guard let uuid = UUID(UUIDString) else {
+            throw Abort(.badRequest, reason: "Invalid parameter")
+        }
+        
+        return Task.find(uuid, on: req.db)
+            .unwrap(or: Abort(.badRequest, reason: "UUID: \(uuid) Not Found"))
     }
     
     // Request Body를 decoding 하여 DB에 저장
