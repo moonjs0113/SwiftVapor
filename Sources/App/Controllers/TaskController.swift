@@ -15,8 +15,8 @@ struct TaskController: RouteCollection {
         let tasks = routes.grouped("tasks")
         tasks.post(use: self.create) // POST /tasks
         tasks.group(":id") { task in // :id - Dynamic Parameter
-            tasks.delete(use: self.delete) // DELETE /tasks/:id
-            tasks.get(use: getTask) // GET /tasks/:id
+            task.delete(use: self.delete) // DELETE /tasks/:id
+            task.get(use: getTask) // GET /tasks/:id
         }
     }
     
