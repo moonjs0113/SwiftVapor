@@ -11,12 +11,12 @@ import Vapor
 // Route가 그룹화할 수 있도록 RouteCollection 채택
 struct TaskController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
+        routes.get("allTask", use: self.showAll) // GET /allTask
         let tasks = routes.grouped("tasks")
-        tasks.get("allTask", use: self.showAll) // GET /tasks/allTask
         tasks.post(use: self.create) // POST /tasks
         tasks.group(":id") { task in // :id - Dynamic Parameter
             tasks.delete(use: self.delete) // DELETE /tasks/:id
-            tasks.get(use: getTask)
+            tasks.get(use: getTask) // GET /tasks/:id
         }
     }
     
