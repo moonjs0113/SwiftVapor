@@ -44,7 +44,7 @@ struct TaskController: RouteCollection {
         }
         
         return Task.find(uuid, on: req.db)//req.parameters.get("id"), on: req.db)
-            .unwrap(or: Abort(.notFound))
+            .unwrap(or: Abort(.notFound, reason: "UUID: \(uuid) Not Found"))
             .flatMap {
                 $0.delete(on: req.db)
             }
