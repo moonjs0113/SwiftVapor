@@ -24,6 +24,7 @@ public func configure(_ app: Application) throws {
     app.migrations.add(CreateMovie())
     app.migrations.add(CreateTodo())
     app.migrations.add(TaskMigration())
+    app.migrations.add(CourseMigration())
     
     // register routes
     try routes(app)
