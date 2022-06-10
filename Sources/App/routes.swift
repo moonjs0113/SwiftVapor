@@ -38,6 +38,14 @@ func routes(_ app: Application) throws {
 //
 //
 //    }
+    
+    for index in 1..<19 {
+        app.get("flatfish_sashimi#\(index).mp4") { req -> Response in
+            let directoryURL = DirectoryConfiguration.detect().publicDirectory + "flatfish_sashimi#\(index).mp4"
+            return req.fileio.streamFile(at: directoryURL, mediaType: .multipart)
+        }
+    }
+    
     app.get("testVideo.mp4") { req -> Response in
         let directoryURL = DirectoryConfiguration.detect().publicDirectory + "testVideo.mp4"
         return req.fileio.streamFile(at: directoryURL, mediaType: .multipart)
