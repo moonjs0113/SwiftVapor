@@ -13,8 +13,8 @@ struct CourseController: RouteCollection {
         let course = routes.grouped("course")
         course.get(use: self.allCourse)
         course.post(use: self.createCourse)
-        course.group(":id") { task in
-            course.delete(use: self.delete)
+        course.group(":id") { courseID in
+            courseID.delete(use: self.delete)
         }
     }
     
