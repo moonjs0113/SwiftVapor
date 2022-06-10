@@ -53,21 +53,20 @@ struct TaskController: RouteCollection {
     // id로 데이터 조회, 없으면 unwrap이 호출 되며 .notFound 오류 반환
     // flatMap 콜백으로 EventLoopFuture 반환 -> 중첩을 피하기 위하
     func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
-        guard let UUIDString = req.parameters.get("id") else {
-            throw Abort(.badRequest, reason: "Failed Get id Parameters")
-        }
+//        guard let UUIDString = req.parameters.get("id") else {
+//            throw Abort(.badRequest, reason: "Failed Get id Parameters")
+//        }
+//
+//        guard let uuid = UUID(UUIDString) else {
+//            throw Abort(.badRequest, reason: "Invalid parameter")
+//        }
         
-        guard let uuid = UUID(UUIDString) else {
-            throw Abort(.badRequest, reason: "Invalid parameter")
-        }
         
         return Task.find(req.parameters.get("id"), on: req.db)//req.parameters.get("id"), on: req.db)
-            .unwrap(or: Abort(.badRequest, reason: "UUID: \(uuid) Not Found"))
+            .unwrap(or: Abort(.custom(code: 404, reasonPhrase: "UUID Not Found")))
             .flatMap {
                 $0.delete(on: req.db)
             }
             .transform(to: .ok)
     }
-    
 }
-
