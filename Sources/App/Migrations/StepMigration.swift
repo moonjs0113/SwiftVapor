@@ -13,6 +13,7 @@ struct StepMigration: Migration {
     func prepare(on database: Database) -> EventLoopFuture<Void> {
         database.schema(Step.schema)
             .id()
+            .field("courseID", .uuid, .required)
             .field("totalStep", .int, .required)
             .field("currentStep", .int, .required)
             .field("title", .string, .required)
