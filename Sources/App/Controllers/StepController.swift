@@ -24,7 +24,12 @@ struct StepController: RouteCollection {
     }
     
     func getSingletep(req: Request) throws -> EventLoopFuture<Step> {
-        let step = try req.content.decode(Step.self)
+//        let step = try req.content.decode(Step.self)
+        guard let bodyData = req.body.data else {
+            throw Abort(.badRequest, reason: "Require Body")
+        }
+        
+        let step = try JSONDecoder().decode(RequestStep.self, from: bodyData)
         
         return Step.query(on: req.db)
             .filter(\.$courseID == step.courseID)

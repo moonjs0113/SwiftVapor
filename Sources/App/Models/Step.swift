@@ -8,6 +8,11 @@
 import Fluent
 import Vapor
 
+struct RequestStep: Codable {
+    var courseID: UUID
+    var currentStep: Int
+}
+
 final class Step: Model, Content {
     static let schema: String = "step"
     
