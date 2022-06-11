@@ -22,18 +22,8 @@ func routes(_ app: Application) throws {
         return req.fileio.streamFile(at: directoryURL, mediaType: .multipart)
     }
     
-    // /movies
-    app.get("movies") { req in
-        Movie.query(on: req.db).all()
-    }
-    
-    // movies POST
-    app.post("movies") { req -> EventLoopFuture<Movie> in
-        let movie = try req.content.decode(Movie.self)
-        return movie.create(on: req.db).map { movie }
-    }
-    
     try app.register(collection: TodoController())
     try app.register(collection: TaskController())
     try app.register(collection: CourseController())
+    try app.register(collection: StepController())
 }

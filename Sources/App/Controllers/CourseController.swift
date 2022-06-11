@@ -47,4 +47,5 @@ struct CourseController: RouteCollection {
             .unwrap(or: Abort(.badRequest, reason: "courseName: \(courseName) Not Found"))
     }
     
+    
 }
