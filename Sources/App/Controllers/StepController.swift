@@ -20,7 +20,7 @@ struct StepController: RouteCollection {
     }
     
     func allStep(req: Request) throws -> EventLoopFuture<[Step]> {
-        return Step.query(on: req.db).all()
+        return Step.query(on: req.db).sort(\.$currentStep).all()
     }
     
     func getSingletep(req: Request) throws -> EventLoopFuture<Step> {
@@ -51,8 +51,9 @@ struct StepController: RouteCollection {
         let step = try JSONDecoder().decode(RequestStep.self, from: bodyData)
         
         return Step.query(on: req.db)
-            .filter(\.$courseID == step.courseID)
-            .filter(\.$currentStep == step.currentStep)
+            .filter(\.$id == step.id)
+//            .filter(\.$courseID == step.courseID)
+//            .filter(\.$currentStep == step.currentStep)
             .all()
             .flatMap{
                 $0.delete(on: req.db)
