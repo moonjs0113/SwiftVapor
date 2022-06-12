@@ -15,7 +15,7 @@ struct StepController: RouteCollection {
         step.post(use: self.getSingletep)
         step.group("register") { register in
             register.post(use: self.registerStep)
-//            register.delete(use: self.deleteStep)
+            register.delete(use: self.deleteStep)
         }
     }
     
@@ -43,8 +43,28 @@ struct StepController: RouteCollection {
         return step.create(on: req.db).map { step }
     }
     
+    func deleteStep(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        guard let bodyData = req.body.data else {
+            throw Abort(.badRequest, reason: "Require Body")
+        }
+        
+        let step = try JSONDecoder().decode(RequestStep.self, from: bodyData)
+        
+        return Step.query(on: req.db)
+            .filter(\.$courseID == step.courseID)
+            .filter(\.$currentStep == step.currentStep)
+            .all()
+            .flatMap{
+                $0.delete(on: req.db)
+            }
+            .transform(to: .ok)
+    }
+    
 //    func deleteStep(req: Request) throws -> EventLoopFuture<HTTPStatus> {
-//        return Step.query(on: req.db).filter((\.$id == id && \.$currentStep == $currentStep)).unwrap(or: Abort(.notFound))
+//        return Step.query(on: req.db)
+//            .filter(\.$id == id)
+//
+//            .unwrap(or: Abort(.notFound))
 //            .flatMap {
 //                $0.delete(on: req.db)
 //            }
