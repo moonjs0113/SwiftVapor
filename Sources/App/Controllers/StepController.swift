@@ -48,7 +48,7 @@ struct StepController: RouteCollection {
             throw Abort(.badRequest, reason: "Require Body")
         }
         
-        let step = try JSONDecoder().decode(RequestStep.self, from: bodyData)
+        let step = try JSONDecoder().decode(DeleteRequestStep.self, from: bodyData)
         
         return Step.query(on: req.db)
             .filter(\.$id == step.id)

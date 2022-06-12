@@ -8,6 +8,10 @@
 import Fluent
 import Vapor
 
+struct DeleteRequestStep: Codable {
+    var id: UUID
+}
+
 struct RequestStep: Codable {
     var courseID: UUID
     var currentStep: Int
