@@ -38,7 +38,7 @@ final class QuizUser: Model, Content {
         
     }
 
-    init(id: UUID? = nil, history: QuizHistory? = nil, exp: Int) {
+    init(id: UUID? = nil, history: QuizHistory? = nil, exp: Int = 0) {
         self.id = id
         self.history = history
         self.exp = exp

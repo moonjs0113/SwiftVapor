@@ -1,22 +1,33 @@
 # Swift Vapor AWS
 
 ```swift
-sudo apt-update -y
-sudo apt-upgrade -y
+sudo apt update -y
+sudo apt upgrade -y
+sudo apt-get install htop -y
 sudo apt-get install git clang libicu-dev libpython2.7 -y
-sudo apt-get postgresql supervisor nginx -y
-sudo apt-update -y
-sudo apt-upgrade -y
+sudo apt-get install postgresql supervisor nginx git-lfs -y
+sudo apt update -y
+sudo apt upgrade -y
+echo "##### APT Install List #####"
+dpkg -l | grep -E "git|git-lfs|clang|libicu-dev|libpython2.7|postgresql|supervisor|nginx|htop"
+
+echo "##### Install Swift #####"
 wget https://download.swift.org/swift-5.6.1-release/ubuntu1804/swift-5.6.1-RELEASE/swift-5.6.1-RELEASE-ubuntu18.04.tar.gz
 tar xzf swift-5.6.1-RELEASE-ubuntu18.04.tar.gz
 sudo mv swift-5.6.1-RELEASE-ubuntu18.04 /usr/share/swift
 echo "export PATH=/usr/share/swift/usr/bin:$PATH" >> ~/.bashrc
-cat .bashrc
+echo 'export VISUAL="vim"' >> ~/.bashrc
+echo 'export EDITOR="$VISUAL"' >> ~/.bashrc
 source .bashrc
+echo "##### Swift Version #####"
 swift --version
+
+echo "##### Install Vapor #####"
 git clone https://github.com/vapor/toolbox.git
 cd toolbox
 make install
+echo "##### Vapor Version #####"
+vapor --version
 
 vapor new {APPNAME}
 cd {APPNAME}
@@ -51,6 +62,8 @@ ulimit -n 65536
 ```swift
 // Nginx 설정 (포워딩)
 /etc/nignx/sites-available/default
+
+sudo vi
 
 ...
 server_name _;
@@ -91,6 +104,13 @@ postgres=# \du // List of Roles
 postgres=# \d // List of Relations
 postgres=# SELECT * FROM PG_USER; // User 조회
 postgres=# \q // exit
+postgres=# \c [db_name] // DB 위치 변경
+// vapor
+postgres=# CREATE USER {USERNAME} SUPERUSER; // SUPERUSER role User 생성
+// USER Role 추가
+postgres=# ALTER ROLE {USERNAME} CREATEDB REPLICATION CREATEROLE BYPASSRLS;
+
+postgres=# CREATE DATABASE {DATABASE_NAME}; // vapordb
 
 // Postgresql Relation 못찾을 때 & Model 추가해서 Migrate해야할 때
 vapor run migrate

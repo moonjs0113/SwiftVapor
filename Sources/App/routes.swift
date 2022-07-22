@@ -22,8 +22,9 @@ func routes(_ app: Application) throws {
         return req.fileio.streamFile(at: directoryURL, mediaType: .multipart)
     }
     
-    try app.register(collection: TodoController())
-    try app.register(collection: TaskController())
-    try app.register(collection: CourseController())
-    try app.register(collection: StepController())
+    try app.register(collection: QuizController())
+//    try app.register(collection: TodoController())
+//    try app.register(collection: TaskController())
+//    try app.register(collection: CourseController())
+//    try app.register(collection: StepController())
 }

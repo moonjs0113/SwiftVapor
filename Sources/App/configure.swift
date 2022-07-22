@@ -9,8 +9,8 @@ public func configure(_ app: Application) throws {
     
     app.databases.use(.postgres(hostname: "localhost",
                                 port: 5432,
-                                username: "ubuntu",
-                                password: "password",
+                                username: "vapor",
+                                password: "vapor",
                                 database: "vapordb"), as: .psql)
     
     //    app.databases.use(.postgres(
@@ -21,10 +21,10 @@ public func configure(_ app: Application) throws {
     //        database: Environment.get("vapordb") ?? "vapordb"
     //    ), as: .psql)
     
-    app.migrations.add(CreateTodo())
-    app.migrations.add(TaskMigration())
-    app.migrations.add(CourseMigration())
-    app.migrations.add(StepMigration())
+//    app.migrations.add(CreateTodo())
+//    app.migrations.add(TaskMigration())
+//    app.migrations.add(CourseMigration())
+//    app.migrations.add(StepMigration())
     
     app.migrations.add(QuizMigration())
     app.migrations.add(QuizUserMigration())
