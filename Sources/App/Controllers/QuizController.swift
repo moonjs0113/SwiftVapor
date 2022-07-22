@@ -59,7 +59,7 @@ struct QuizController: RouteCollection {
 
 final class NetworkManager {
     static func fetchQuizList() {
-        let urlString = "https://docs.google.com/spreadsheets/d/1hmXMCpAXUX33AoD8HxWS6BfeigGie9Y_GtJGaaxsIIg/edit#gid=938396143"
+        let urlString = "https://docs.google.com/spreadsheets/d/1YSAsmsb0b3fSXBrPGS8c6Pg15LtgxtvTm9gcNVlESLo/gviz/tq?gid=938396143"
         
         guard let url = URL(string: urlString) else {
             print("invaild URL")
