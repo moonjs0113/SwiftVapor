@@ -35,6 +35,7 @@ struct QuizController: RouteCollection {
     }
     
     func deleteUser(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        print(req.parameters.get("id"))
         return QuizUser.find(req.parameters.get("id"), on: req.db)
             .unwrap(or: Abort(.notFound))
             .flatMap {
