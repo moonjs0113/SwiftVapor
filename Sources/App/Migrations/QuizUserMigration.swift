@@ -20,7 +20,8 @@ struct QuizUserMigration: Migration {
     func revert(on database: Database) -> EventLoopFuture<Void> {
         return database.schema(QuizUser.schema).delete()
     }
-} 
+}
+
 
 //@ID(key: .id)var id: UUID?
 //@Field(key: "history")var history: [Quiz: QuizStatus]
