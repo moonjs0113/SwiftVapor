@@ -26,6 +26,9 @@ public func configure(_ app: Application) throws {
     app.migrations.add(CourseMigration())
     app.migrations.add(StepMigration())
     
+    app.migrations.add(QuizMigration())
+    app.migrations.add(QuizUserMigration())
+    
     // register routes
     try routes(app)
 }
