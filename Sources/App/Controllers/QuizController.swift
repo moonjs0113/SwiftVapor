@@ -62,7 +62,10 @@ struct QuizController: RouteCollection {
             return
         }
         
-        URLSession.shared.dataTask(with: url) { data, response, error in
+        var req = URLRequest(url: url)
+        req.httpMethod = "GET"
+        
+        URLSession.shared.dataTask(with: req) { data, response, error in
             print(response)
             print(data)
         }
