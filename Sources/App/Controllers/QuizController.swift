@@ -24,7 +24,7 @@ struct QuizController: RouteCollection {
     
     // 조회
     func firstUserToken(req: Request) throws -> EventLoopFuture<Response> {
-        let quizUser = QuizUser()
+        let quizUser = QuizUser(exp: 0)
         return quizUser.encodeResponse(for: req)
     }
 
