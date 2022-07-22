@@ -66,11 +66,13 @@ final class NetworkManager {
             return
         }
         
-        do {
-            let data = try Data(contentsOf: url)
-            print(data)
-        } catch {
-            print("Fail")
+        DispatchQueue.global(qos: .background).async {
+            do {
+                let data = try Data(contentsOf: url)
+                print(data)
+            } catch {
+                print("Fail")
+            }
         }
     }
 }
