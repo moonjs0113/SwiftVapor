@@ -104,13 +104,15 @@ postgres=# \du // List of Roles
 postgres=# \d // List of Relations
 postgres=# SELECT * FROM PG_USER; // User 조회
 postgres=# \q // exit
-postgres=# \c [db_name] // DB 위치 변경
+postgres=# \c {DATABASE_NAME} // DB 위치 변경
 // vapor
-postgres=# CREATE USER {USERNAME} SUPERUSER; // SUPERUSER role User 생성
+postgres=# CREATE USER {USER_NAME} SUPERUSER; // SUPERUSER role User 생성
 // USER Role 추가
-postgres=# ALTER ROLE {USERNAME} CREATEDB REPLICATION CREATEROLE BYPASSRLS;
+postgres=# ALTER ROLE {USER_NAME} CREATEDB REPLICATION CREATEROLE BYPASSRLS;
 
 postgres=# CREATE DATABASE {DATABASE_NAME}; // vapordb
+
+postgres=# ALTER USER {USER_NAME} WITH PASSWORD '{NEW_PASSWORD}';
 
 // Postgresql Relation 못찾을 때 & Model 추가해서 Migrate해야할 때
 vapor run migrate

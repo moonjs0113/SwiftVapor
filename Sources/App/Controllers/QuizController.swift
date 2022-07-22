@@ -11,8 +11,12 @@ import Foundation
 
 struct QuizController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
-        let todos = routes.grouped("quiz")
-        todos.get("firstUserToken", use: firstUserToken)
+        let quiz = routes.grouped("quiz")
+        quiz.get("firstUserToken", use: firstUserToken)
+        quiz.get("allUser", use: allUser)
+        quiz.group(":id") { quizUserID in
+            quizUserID.delete(use: self.deleteUser)
+        }
     }
 
     // get token
@@ -29,5 +33,17 @@ struct QuizController: RouteCollection {
 //        return quizUser.encodeResponse(for: req)
         return quizUser.create(on: req.db).map{ quizUser }
     }
+    
+    func deleteUser(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        return QuizUser.find(req.parameters.get("id"), on: req.db)
+            .unwrap(or: Abort(.notFound))
+            .flatMap {
+                $0.delete(on: req.db)
+            }
+            .transform(to: .ok)
+    }
 
+    func allUser(req: Request) throws -> EventLoopFuture<[QuizUser]> {
+        return QuizUser.query(on: req.db).sort(\.$id).all()
+    }
 }

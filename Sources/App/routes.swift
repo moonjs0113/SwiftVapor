@@ -10,17 +10,17 @@ func routes(_ app: Application) throws {
         return "Hello, world!"
     }
     
-    for index in 1..<19 {
-        app.get("flatfish_sashimi_\(index).mp4") { req -> Response in
-            let directoryURL = DirectoryConfiguration.detect().publicDirectory + "flatfish_sashimi#\(index).MP4"
-            return req.fileio.streamFile(at: directoryURL, mediaType: .multipart)
-        }
-    }
+//    for index in 1..<19 {
+//        app.get("flatfish_sashimi_\(index).mp4") { req -> Response in
+//            let directoryURL = DirectoryConfiguration.detect().publicDirectory + "flatfish_sashimi#\(index).MP4"
+//            return req.fileio.streamFile(at: directoryURL, mediaType: .multipart)
+//        }
+//    }
     
-    app.get("testVideo.mp4") { req -> Response in
-        let directoryURL = DirectoryConfiguration.detect().publicDirectory + "testVideo.mp4"
-        return req.fileio.streamFile(at: directoryURL, mediaType: .multipart)
-    }
+//    app.get("testVideo.mp4") { req -> Response in
+//        let directoryURL = DirectoryConfiguration.detect().publicDirectory + "testVideo.mp4"
+//        return req.fileio.streamFile(at: directoryURL, mediaType: .multipart)
+//    }
     
     try app.register(collection: QuizController())
 //    try app.register(collection: TodoController())
