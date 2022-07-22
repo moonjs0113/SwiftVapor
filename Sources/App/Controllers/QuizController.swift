@@ -66,13 +66,11 @@ final class NetworkManager {
             return
         }
         
-        var req = URLRequest(url: url)
-        req.httpMethod = "GET"
-        
-        URLSession.shared.dataTask(with: req) { data, response, error in
-            print(response)
+        do {
+            let data = try Data(contentsOf: url)
             print(data)
+        } catch {
+            print("Fail")
         }
-        .resume()
     }
 }
