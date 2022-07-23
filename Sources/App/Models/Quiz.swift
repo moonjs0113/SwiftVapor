@@ -23,9 +23,13 @@ final class Quiz: Model, Content, Hashable {
     
     static let schema = "quiz"
     
-    /// Quiz의 ID
+    /// Quiz의 DB ID
     @ID(key: .id)
     var id: UUID?
+    
+    /// Quiz Sheet ID
+    @Field(key: "type")
+    var quizID: QuizType
     
     /// 문제의 유형
     @Field(key: "type")

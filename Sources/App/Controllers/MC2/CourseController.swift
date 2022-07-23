@@ -42,7 +42,8 @@ struct CourseController: RouteCollection {
             throw Abort(.badRequest, reason: "Failed Get Parameters")
         }
         
-        return Course.query(on: req.db).filter(\.$courseName == courseName)
+        return Course.query(on: req.db)
+            .filter(\.$courseName == courseName)
             .first()
             .unwrap(or: Abort(.badRequest, reason: "courseName: \(courseName) Not Found"))
     }
