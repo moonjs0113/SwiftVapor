@@ -15,7 +15,7 @@ struct QuizController: RouteCollection {
         // External Response
         quiz.get("firstUserToken", use: firstUserToken)
         quiz.get("todayQuiz", use: todayQuiz)
-        quiz.post("submitAnswer", use: solveResult)
+//        quiz.post("submitAnswer", use: solveResult)
         //        quiz.post("history", use: history)
         
         // Internal Response
@@ -72,14 +72,6 @@ struct QuizController: RouteCollection {
     }
     
     // MARK: - QUIZ
-    // Today Quiz
-    func todayQuiz(req: Request) throws -> EventLoopFuture<[Quiz]> {
-        return Quiz.query(on: req.db)
-            .filter(\.$isPublished == false)
-            //.sort(<#T##field: KeyPath<Quiz, QueryableProperty>##KeyPath<Quiz, QueryableProperty>#>)
-            .all()
-    }
-    
     // Create
     func registerQuiz(req: Request) throws -> EventLoopFuture<HTTPStatus> {
         let quiz = try req.content.decode(Quiz.self)
@@ -119,31 +111,38 @@ struct QuizController: RouteCollection {
     
     
     // MARK: - Function
-    func solveResult(req: Request) throws -> EventLoopFuture<Int> {
-        guard let bodyData = req.body.data else {
-            throw Abort(.badRequest, reason: "Require Body")
-        }
-        
-        let solveQuiz = try JSONDecoder().decode(SolveQuiz.self, from: bodyData)
-        
-        let quiz = Quiz.find(solveQuiz.quizID, on: req.db)
-        let rightAnswer = try quiz.wait()?.rightAnswer
-        
-        var exp = (rightAnswer == solveQuiz.answer) ? 20 : 10
-        if let publishedDate = try quiz.wait()?.publishedDate {
-            if publishedDate < Date.now {
-                exp -= 5
-            }
-        }
-        
-        //DB 업데이트 필요
-        return QuizUser.find(solveQuiz.userID, on: req.db)
-            .unwrap(or: Abort(.notFound))
-            .map { user in
-                user.exp += exp
-                return user.exp
-            }
+    func todayQuiz(req: Request) throws -> EventLoopFuture<[Quiz]> {
+        return Quiz.query(on: req.db)
+            .filter(\.$isPublished == false)
+            //.sort(<#T##field: KeyPath<Quiz, QueryableProperty>##KeyPath<Quiz, QueryableProperty>#>)
+            .all()
     }
+    
+//    func solveResult(req: Request) throws -> EventLoopFuture<Int> {
+//        guard let bodyData = req.body.data else {
+//            throw Abort(.badRequest, reason: "Require Body")
+//        }
+//
+//        let solveQuiz = try JSONDecoder().decode(SolveQuiz.self, from: bodyData)
+//
+//        let quiz = Quiz.find(solveQuiz.quizID, on: req.db)
+//        let rightAnswer = try quiz.wait()?.rightAnswer
+//
+//        var exp = (rightAnswer == solveQuiz.answer) ? 20 : 10
+//        if let publishedDate = try quiz.wait()?.publishedDate {
+//            if publishedDate < Date.now {
+//                exp -= 5
+//            }
+//        }
+//
+//        //DB 업데이트 필요
+//        return QuizUser.find(solveQuiz.userID, on: req.db)
+//            .unwrap(or: Abort(.notFound))
+//            .map { user in
+//                user.exp += exp
+//                return user.exp
+//            }
+//    }
     
     func history(req: Request) throws -> EventLoopFuture<[QuizHistory]> {
         guard let bodyData = req.body.data else {
