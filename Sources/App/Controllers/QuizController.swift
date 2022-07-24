@@ -128,7 +128,7 @@ struct QuizController: RouteCollection {
         return quiz.create(on: req.db).map { quiz }.transform(to: .ok)
     }
     
-    func deleteAllTodayQuiz(req: Request) throws -> EventLoopFuture<[Quiz]> {
+    func deleteAllTodayQuiz(req: Request) throws -> EventLoopFuture<HTTPStatus> {
         return TodayQuiz.query(on: req.db)
             .all()
             .mapEach {
