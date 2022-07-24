@@ -17,7 +17,7 @@ struct QuizUserMigration: Migration {
         
         return database.schema(QuizUser.schema)
             .id()
-            .field("history", .dictionary)
+            .field("history", .array(of: .custom(QuizHistory.self)))
             .field("exp", .int, .required)
             .create()
     }

@@ -24,6 +24,11 @@ struct UserHistory: Codable {
     var userID: UUID
 }
 
+struct QuizHistory: Codable {
+    var quiz: Quiz
+    var quizStatus: QuizStatus
+}
+
 //final class QuizHistory: Fields {
 //    // The pet's name.
 //    @Field(key: "quizID")
@@ -46,7 +51,7 @@ final class QuizUser: Model, Content {
     
     /// QuizUser의 History
     @Field(key: "history")
-    var history: [Quiz: QuizStatus]
+    var history: [QuizHistory]
     
     /// QuizUser의 Exp
     @Field(key: "exp")
@@ -56,7 +61,7 @@ final class QuizUser: Model, Content {
         
     }
 
-    init(id: UUID? = nil, history: [Quiz: QuizStatus] = [:], exp: Int = 0) {
+    init(id: UUID? = nil, history: [QuizHistory] = [], exp: Int = 0) {
         self.id = id
         self.history = history
         self.exp = exp
