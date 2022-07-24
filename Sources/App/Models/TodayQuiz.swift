@@ -9,7 +9,7 @@ import Fluent
 import Vapor
 
 final class TodayQuiz: Model, Content {
-    static let schema = "quiz"
+    static let schema = "todayquiz"
     
     /// Quiz의 DB ID
     @ID(key: .id)
