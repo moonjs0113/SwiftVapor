@@ -32,6 +32,8 @@ struct QuizController: RouteCollection {
         // TodayQuiz
         quiz.delete("todayQuiz", use: deleteAllTodayQuiz)
         quiz.post("registerTodayQuiz", use: registerTodayQuiz)
+        quiz.post("updateTodayQuiz", use: updateTodayQuiz)
+        
         
         // Quiz User
         let quizUser = routes.grouped("quizUser")
@@ -88,7 +90,9 @@ struct QuizController: RouteCollection {
     // Create
     func registerQuiz(req: Request) throws -> EventLoopFuture<HTTPStatus> {
         let quiz = try req.content.decode(Quiz.self)
-        return quiz.create(on: req.db).map { quiz }.transform(to: .ok)
+        return quiz.create(on: req.db)
+            .map { $0 }
+            .transform(to: .ok)
     }
     
     // Read
@@ -107,44 +111,57 @@ struct QuizController: RouteCollection {
     func deleteAllQuiz(req: Request) throws -> EventLoopFuture<HTTPStatus> {
         return Quiz.query(on: req.db)
             .all()
-            .mapEach {
-                $0.delete(on: req.db)
-            }
+            .mapEach { $0.delete(on: req.db) }
             .transform(to: .ok)
     }
     
     func deleteQuiz(req: Request) throws -> EventLoopFuture<HTTPStatus> {
         return Quiz.find(req.parameters.get("id"), on: req.db)
             .unwrap(or: Abort(.custom(code: 404, reasonPhrase: "UUID Not Found")))
-            .flatMap {
-                $0.delete(on: req.db)
-            }
+            .flatMap { $0.delete(on: req.db) }
             .transform(to: .ok)
     }
     
     // MARK: - Today Quiz
     func registerTodayQuiz(req: Request) throws -> EventLoopFuture<HTTPStatus> {
         let quiz = try req.content.decode(TodayQuiz.self)
-        return quiz.create(on: req.db).map { quiz }.transform(to: .ok)
+        return quiz.create(on: req.db)
+            .map { quiz }
+            .transform(to: .ok)
+    }
+    
+    func updateTodayQuiz(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        let quiz = try req.content.decode(TodayQuiz.self)
+        return Quiz.query(on: req.db)
+            .filter(\.$quizID == quiz.quizID)
+            .all()
+            .mapEach {
+                $0.publishedDate = Date.now
+                $0.isPublished = true
+                $0.update(on: req.db)
+            }
+            .transform(to: .ok)
+        
     }
     
     func deleteAllTodayQuiz(req: Request) throws -> EventLoopFuture<HTTPStatus> {
         return TodayQuiz.query(on: req.db)
             .all()
-            .mapEach {
-                $0.delete(on: req.db)
-            }
+            .mapEach { $0.delete(on: req.db) }
             .transform(to: .ok)
     }
     
     // MARK: - Function
     func firstUserToken(req: Request) throws -> EventLoopFuture<QuizUser> {
         let quizUser = QuizUser(exp: 0)
-        return quizUser.create(on: req.db).map{ quizUser }
+        return quizUser.create(on: req.db)
+            .map{ quizUser }
     }
     
     func todayQuiz(req: Request) throws -> EventLoopFuture<[TodayQuiz]> {
-        return TodayQuiz.query(on: req.db).sort(\.$quizID).all()
+        return TodayQuiz.query(on: req.db)
+            .sort(\.$quizID)
+            .all()
     }
     
 //    func solveResult(req: Request) throws -> EventLoopFuture<Int> {

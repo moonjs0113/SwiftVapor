@@ -102,14 +102,14 @@ Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
             // 7. 기존 오늘의 문제 삭제
             try await NetworkManager.shared.deleteTodayQuiz()
             
-//            for todayQuiz in notPublishedQuiz[0...2] {
-                // 8. 오늘의 문제 등록
-//                print(todayQuiz)
-//                try await NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
+            for todayQuiz in notPublishedQuiz[0...2] {
+//                 8. 오늘의 문제 등록
+                print(todayQuiz)
+                try await NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
 
-                // 9. Quiz 테이블에 isPublished 업데이트
-//                try await NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
-//            }
+//                 9. Quiz 테이블에 isPublished 업데이트
+                try await NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
+            }
             
         } catch(let e as NetworkError) {
             print(e)
