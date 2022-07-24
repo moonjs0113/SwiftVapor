@@ -136,7 +136,7 @@ struct QuizController: RouteCollection {
             .filter(\.$quizID == quiz.quizID)
             .all()
             .mapEach {
-                $0.publishedDate = Date.now
+                $0.publishedDate = Date()
                 $0.isPublished = true
                 $0.update(on: req.db)
             }
