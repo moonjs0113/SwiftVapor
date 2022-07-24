@@ -15,7 +15,7 @@ struct QuizController: RouteCollection {
         // External Response
         quiz.get("firstUserToken", use: firstUserToken)
         quiz.get("todayQuiz", use: todayQuiz)
-//        quiz.post("submitAnswer", use: solveResult)
+        quiz.post("submitAnswer", use: solveResult)
         //        quiz.post("history", use: history)
         
         
