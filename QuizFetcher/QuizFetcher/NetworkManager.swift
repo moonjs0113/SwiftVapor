@@ -114,7 +114,11 @@ actor NetworkManager {
         request.httpMethod = HTTPMethod.GET.rawValue
         
         let (data, _) = try await URLSession.shared.data(for: request)
-        return try JSONDecoder().decode([QuizDTO].self, from: data)
+        do {
+            return try JSONDecoder().decode([QuizDTO].self, from: data)
+        } catch {
+            throw NetworkError.jsonDecoderError
+        }
     }
     
     func registerTodayQuiz(quiz: QuizDTO) async throws {

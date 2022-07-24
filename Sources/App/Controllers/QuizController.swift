@@ -23,7 +23,7 @@ struct QuizController: RouteCollection {
         // Quiz
         quiz.get("allQuiz", use: allQuiz)
         quiz.post("register", use: registerQuiz)
-//        quiz.delete(use: deleteAllTodayQuiz)
+        quiz.delete(use: deleteAllQuiz)
         quiz.group(":id") { quizID in
             quizID.get(use: singleQuiz)
             quizID.delete(use: deleteQuiz)
