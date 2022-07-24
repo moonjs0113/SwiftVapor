@@ -18,7 +18,7 @@ struct QuizMigration: Migration {
             .id()
             .field("type", .string, .required)
             .field("question", .string, .required)
-            .field("rigthAnswer", .string, .required)
+            .field("rightAnswer", .string, .required)
             .field("wrongAnswer", .string, .required)
             .field("description", .string, .required)
             .field("example", .array(of: .string), .required)

@@ -28,7 +28,7 @@ final class Quiz: Model, Content, Hashable {
     var id: UUID?
     
     /// Quiz Sheet ID
-    @Field(key: "quizType")
+    @Field(key: "quizID")
     var quizID: String
     
     /// 문제의 유형

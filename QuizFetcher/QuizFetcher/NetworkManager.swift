@@ -25,7 +25,7 @@ enum HTTPMethod: String {
 class NetworkManager {
     static let shared: NetworkManager = NetworkManager()
     
-    let baseURLString: String = "http://ec2-3-237-49-198.compute-1.amazonaws.com/"
+    let baseURLString: String = "http://ec2-3-237-49-198.compute-1.amazonaws.com"
     
     func registerQuiz(quiz: Quiz) {
         guard let url = URL(string: baseURLString + "/quiz/register") else {

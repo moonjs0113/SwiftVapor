@@ -1,3 +1,4 @@
+clear
 echo $1
 git add .
 git status
