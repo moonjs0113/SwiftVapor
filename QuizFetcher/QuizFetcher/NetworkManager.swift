@@ -46,6 +46,25 @@ class NetworkManager {
         }.resume()
     }
     
+    func requestAllQuiz(quiz: Quiz) {
+        guard let url = URL(string: baseURLString + "/quiz/allQuiz") else {
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = HTTPMethod.GET.rawValue
+        
+        let quizDTO: QuizDTO = QuizDTO(quiz: quiz)
+        request.httpBody = try? JSONEncoder().encode(quizDTO)
+        
+        URLSession.shared.dataTask(with: request) { _, _, error in
+            if let error = error {
+                print(error)
+            }
+        }.resume()
+    }
+    
     func deleteAllQuiz(quiz: Quiz) {
         guard let url = URL(string: baseURLString + "/quiz") else {
             return

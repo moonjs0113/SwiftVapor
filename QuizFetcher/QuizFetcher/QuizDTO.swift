@@ -8,7 +8,7 @@
 import Foundation
 
 struct QuizDTO: Codable {
-    var quizID: String
+    var quizID: Int
     var type: String
     var question: String
     var rightAnswer: String
@@ -23,7 +23,7 @@ struct QuizDTO: Codable {
     var isPublished: Bool = false
     
     init(quiz: Quiz) {
-        self.quizID = quiz.quizID
+        self.quizID = Int(quiz.quizID) ?? 0
         self.type = quiz.type
         self.question = quiz.question
         self.rightAnswer = quiz.rightAnswer

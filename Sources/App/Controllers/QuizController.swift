@@ -82,6 +82,7 @@ struct QuizController: RouteCollection {
         return Quiz.query(on: req.db).sort(\.$quizID).all()
     }
     
+    
     // Update
     
     // Delete
@@ -102,6 +103,7 @@ struct QuizController: RouteCollection {
             }
             .transform(to: .ok)
     }
+    
     
     
     // MARK: - Function
