@@ -25,7 +25,7 @@ struct UserHistory: Codable {
 }
 
 struct QuizHistory: Codable {
-    var quiz: Quiz
+    var quizID: String
     var quizStatus: QuizStatus
 }
 

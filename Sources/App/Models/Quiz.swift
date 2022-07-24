@@ -28,8 +28,8 @@ final class Quiz: Model, Content, Hashable {
     var id: UUID?
     
     /// Quiz Sheet ID
-    @Field(key: "type")
-    var quizID: QuizType
+    @Field(key: "quizType")
+    var quizID: String
     
     /// 문제의 유형
     @Field(key: "type")
@@ -67,10 +67,11 @@ final class Quiz: Model, Content, Hashable {
         
     }
     
-    init(id: UUID? = nil, type: QuizType, question: String,
+    init(id: UUID? = nil, quizID: String, type: QuizType, question: String,
          rightAnswer: String, wrongAnswer: String, description: String,
          example: [String], isPublished: Bool, publishedDate: Date? = nil) {
         self.id = id
+        self.quizID = quizID
         self.type = type
         self.question = question
         self.rightAnswer = rightAnswer

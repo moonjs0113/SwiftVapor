@@ -18,7 +18,7 @@ func requestJSONDataFromSheets() async throws -> Sheet {
     }
     
     guard let startIndex = dataString.firstIndex(of: "("),
-       let lastIndex = dataString.lastIndex(of: ")") else {
+          let lastIndex = dataString.lastIndex(of: ")") else {
         throw NetworkError.notJSONString
         
     }
@@ -36,21 +36,22 @@ func requestJSONDataFromSheets() async throws -> Sheet {
 
 func createQuiz(rowValue: [RowValue?]) -> Quiz {
     return Quiz(quizID: rowValue[0]?.v ?? "",
-         type: rowValue[1]?.v ?? "",
-         question: rowValue[3]?.v ?? "",
-         rightAnswer: rowValue[4]?.v ?? "",
-         wrongAnswer: rowValue[5]?.v ?? "",
-         description: rowValue[6]?.v ?? "",
-         example: rowValue[7]?.v ?? "")
+                type: rowValue[1]?.v ?? "",
+                question: rowValue[3]?.v ?? "",
+                rightAnswer: rowValue[4]?.v ?? "",
+                wrongAnswer: rowValue[5]?.v ?? "",
+                description: rowValue[6]?.v ?? "",
+                example: rowValue[7]?.v ?? "")
 }
 
-Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+Timer.scheduledTimer(withTimeInterval: 4, repeats: true) { _ in
     Task(priority: .high) {
         do {
             let sheet = try await requestJSONDataFromSheets()
             for row in sheet.table.rows {
                 let quiz = createQuiz(rowValue: row.c)
                 print(quiz)
+                NetworkManager.shared.registerQuiz(quiz: quiz)
             }
         } catch(let e as NetworkError) {
             print(e)
@@ -61,4 +62,3 @@ Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
 while true {
     RunLoop.current.run(until: Date().addingTimeInterval(0.1))
 }
-

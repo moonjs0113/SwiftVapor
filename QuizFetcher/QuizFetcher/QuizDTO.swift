@@ -14,11 +14,11 @@ struct QuizDTO: Codable {
     var rightAnswer: String
     var wrongAnswer: String
     var description: String
-    var example: String
+    var example: [String]
     
-    var exmpleList: [String] {
-        return example.components(separatedBy: "\n")
-    }
+//    var exmpleList: [String] {
+//        return example.components(separatedBy: "\n")
+//    }
     
     var isPublished: Bool = false
     
@@ -29,6 +29,6 @@ struct QuizDTO: Codable {
         self.rightAnswer = quiz.rightAnswer
         self.wrongAnswer = quiz.wrongAnswer
         self.description = quiz.description
-        self.example = quiz.example
+        self.example = quiz.exmpleList
     }
 }
