@@ -24,9 +24,17 @@ struct UserHistory: Codable {
     var userID: UUID
 }
 
-struct QuizHistory: Codable {
+final class QuizHistory: Fields {
+    // The pet's name.
+    @Field(key: "quizID")
     var quizID: String
+
+    // The type of pet.
+    @Enum(key: "quizStatus")
     var quizStatus: QuizStatus
+
+    // Creates a new, empty Pet.
+    init() { }
 }
 
 final class QuizUser: Model, Content {
@@ -37,8 +45,8 @@ final class QuizUser: Model, Content {
     var id: UUID?
     
     /// QuizUser의 History
-    @Field(key: "history")
-    var history: [QuizHistory]
+    @Group(key: "history")
+    var history: QuizHistory
     
     /// QuizUser의 Exp
     @Field(key: "exp")
