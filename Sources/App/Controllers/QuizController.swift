@@ -18,17 +18,25 @@ struct QuizController: RouteCollection {
 //        quiz.post("submitAnswer", use: solveResult)
         //        quiz.post("history", use: history)
         
+        
         // Internal Response
+        // Quiz
         quiz.get("allQuiz", use: allQuiz)
         quiz.post("register", use: registerQuiz)
-        quiz.delete(use: deleteAllQuiz)
+        quiz.delete(use: deleteAllTodayQuiz)
         quiz.group(":id") { quizID in
             quizID.get(use: singleQuiz)
             quizID.delete(use: deleteQuiz)
         }
         
+        // TodayQuiz
+        quiz.delete("todayQuiz", use: todayQuiz)
+        quiz.post("registerTodayQuiz", use: registerTodayQuiz)
+        
+        // Quiz User
         let quizUser = routes.grouped("quizUser")
         quizUser.get("allUser", use: allUser)
+//        quizUser.post("updateUserHistory", use: updateUserHistory)
         quizUser.group(":id") { quizUserID in
             quizUserID.get(use: singleUser)
             quizUserID.delete(use: deleteUser)
@@ -65,6 +73,17 @@ struct QuizController: RouteCollection {
         return QuizUser.query(on: req.db).sort(\.$id).all()
     }
     
+    // updateUserHistory 수정
+//    func updateUserHistory(req: Request) throws -> EventLoopFuture<[QuizUser]> {
+//        guard let bodyData = req.body.data else {
+//            throw Abort(.badRequest, reason: "Require Body")
+//        }
+//
+//        let quizUser = try JSONDecoder().decode(Quiz.self, from: bodyData)
+//
+//        return QuizUser.query(on: req.db).sort(\.$id).all()
+//    }
+    
     // MARK: - QUIZ
     // Create
     func registerQuiz(req: Request) throws -> EventLoopFuture<HTTPStatus> {
@@ -81,7 +100,6 @@ struct QuizController: RouteCollection {
     func allQuiz(req: Request) throws -> EventLoopFuture<[Quiz]> {
         return Quiz.query(on: req.db).sort(\.$quizID).all()
     }
-    
     
     // Update
     
@@ -104,7 +122,20 @@ struct QuizController: RouteCollection {
             .transform(to: .ok)
     }
     
+    // MARK: - Today Quiz
+    func registerTodayQuiz(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        let quiz = try req.content.decode(TodayQuiz.self)
+        return quiz.create(on: req.db).map { quiz }.transform(to: .ok)
+    }
     
+    func deleteAllTodayQuiz(req: Request) throws -> EventLoopFuture<[Quiz]> {
+        return TodayQuiz.query(on: req.db)
+            .all()
+            .mapEach {
+                $0.delete(on: req.db)
+            }
+            .transform(to: .ok)
+    }
     
     // MARK: - Function
     func firstUserToken(req: Request) throws -> EventLoopFuture<QuizUser> {
@@ -112,11 +143,8 @@ struct QuizController: RouteCollection {
         return quizUser.create(on: req.db).map{ quizUser }
     }
     
-    func todayQuiz(req: Request) throws -> EventLoopFuture<[Quiz]> {
-        return Quiz.query(on: req.db)
-            .filter(\.$isPublished == false)
-            //.sort(<#T##field: KeyPath<Quiz, QueryableProperty>##KeyPath<Quiz, QueryableProperty>#>)
-            .all()
+    func todayQuiz(req: Request) throws -> EventLoopFuture<[TodayQuiz]> {
+        return TodayQuiz.query(on: req.db).sort(\.$quizID).all()
     }
     
 //    func solveResult(req: Request) throws -> EventLoopFuture<Int> {

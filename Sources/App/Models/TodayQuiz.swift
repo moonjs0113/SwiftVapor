@@ -1,27 +1,14 @@
 //
-//  Quiz.swift
-//  
+//  TodayQuiz.swift
+//  linux0
 //
-//  Created by Moon Jongseek on 2022/07/22.
+//  Created by Moon Jongseek on 2022/07/24.
 //
 
 import Fluent
 import Vapor
 
-enum QuizType: String, Codable {
-    case blank // 유형 1
-    case choice // 유형 2
-}
-
-final class Quiz: Model, Content, Hashable {
-    static func == (lhs: Quiz, rhs: Quiz) -> Bool {
-        lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-    
+final class TodayQuiz: Model, Content {
     static let schema = "quiz"
     
     /// Quiz의 DB ID
@@ -56,21 +43,13 @@ final class Quiz: Model, Content, Hashable {
     @Field(key: "example")
     var example: [String]
     
-    /// 출제 유무
-    @Field(key: "isPublished")
-    var isPublished: Bool
-    
-    /// 출제 날짜
-    @OptionalField(key: "publishedDate")
-    var publishedDate: Date?
-    
     init() {
         
     }
     
     init(id: UUID? = nil, quizID: Int, type: QuizType, question: String,
          rightAnswer: String, wrongAnswer: String, description: String,
-         example: [String], isPublished: Bool, publishedDate: Date? = nil) {
+         example: [String]) {
         self.id = id
         self.quizID = quizID
         self.type = type
@@ -79,7 +58,6 @@ final class Quiz: Model, Content, Hashable {
         self.wrongAnswer = wrongAnswer
         self.description = description
         self.example = example
-        self.isPublished = isPublished
-        self.publishedDate = publishedDate
     }
 }
+

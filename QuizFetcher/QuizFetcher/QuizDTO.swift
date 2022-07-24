@@ -16,11 +16,13 @@ struct QuizDTO: Codable {
     var description: String
     var example: [String]
     
+    
+    var publishedDate: Date?
+    var isPublished: Bool = false
+    
 //    var exmpleList: [String] {
 //        return example.components(separatedBy: "\n")
 //    }
-    
-    var isPublished: Bool = false
     
     init(quiz: Quiz) {
         self.quizID = Int(quiz.quizID) ?? 0

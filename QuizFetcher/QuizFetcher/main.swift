@@ -7,7 +7,7 @@
 
 import Foundation
 
-func requestJSONDataFromSheets() async throws -> Sheet {
+func requestJSONDataFromSheets() async throws -> [Quiz] {
     let urlString = "https://docs.google.com/spreadsheets/d/1YSAsmsb0b3fSXBrPGS8c6Pg15LtgxtvTm9gcNVlESLo/gviz/tq?gid=938396143"
     guard let url = URL(string: urlString) else {
         throw NetworkError.invaildURLString
@@ -31,7 +31,14 @@ func requestJSONDataFromSheets() async throws -> Sheet {
         throw NetworkError.jsonDecoderError
     }
     
-    return sheet
+    var quizList: [Quiz] = []
+    
+    for row in sheet.table.rows {
+        let quiz = createQuiz(rowValue: row.c)
+        quizList.append(quiz)
+    }
+    
+    return quizList
 }
 
 func createQuiz(rowValue: [RowValue?]) -> Quiz {
@@ -44,15 +51,56 @@ func createQuiz(rowValue: [RowValue?]) -> Quiz {
                 example: rowValue[7]?.v ?? "")
 }
 
-Timer.scheduledTimer(withTimeInterval: 4, repeats: true) { _ in
+Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
     Task(priority: .high) {
         do {
-            let sheet = try await requestJSONDataFromSheets()
-            for row in sheet.table.rows {
-                let quiz = createQuiz(rowValue: row.c)
-                print(quiz)
-                NetworkManager.shared.registerQuiz(quiz: quiz)
+            // 1. 모든 문제를 가져온다.
+            var allQuiz = try await NetworkManager.shared.requestAllQuiz()
+             
+            // 2. 시트 문제를 가져온다.
+            let sheetQuiz = try await requestJSONDataFromSheets()
+
+            // 3. 시트 문제랑 비교해서
+            if allQuiz.count < sheetQuiz.count {
+                for i in allQuiz.count...sheetQuiz.count-1 {
+                    // 3-1. 새로운 문제를 서버에 업로드한다.
+                    try await NetworkManager.shared.registerQuiz(quiz: sheetQuiz[i])
+                }
+                // 3-2. 모든 문제를 업데이트한다.
+                allQuiz = try await NetworkManager.shared.requestAllQuiz()
             }
+            
+            // 4. 어제의 퀴즈를 가져온다.
+            let yesterDayQuiz = try await NetworkManager.shared.requestTodayQuiz()
+            
+            // MARK: - Current
+            
+            // 5. 어제 문제를 User history에 추가
+//            for quiz in yesterDayQuiz {
+//                try await NetworkManager.shared.updateUserHistory(quiz: quiz)
+//            }
+            
+            // 6-1. 출제가 안된 문제들
+            let notPublishedQuiz = allQuiz.filter { quiz in
+                !quiz.isPublished
+            }
+            
+            // 6-2. 3문제 이상이 안 되면 에러
+            if notPublishedQuiz.count < 3 {
+                throw NetworkError.notEnoughQuiz
+            }
+
+            // 7. 기존 오늘의 문제 삭제
+            try await NetworkManager.shared.deleteTodayQuiz()
+            
+            for todayQuiz in notPublishedQuiz[0...2] {
+                // 8. 오늘의 문제 등록
+                try await NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
+
+                // 9. Quiz 테이블에 isPublished 업데이트
+//                try await NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
+            }
+            
         } catch(let e as NetworkError) {
             print(e)
         }
