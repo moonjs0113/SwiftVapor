@@ -15,7 +15,7 @@ enum QuizStatus: String, Codable {
 }
 
 struct SolveQuiz: Codable {
-    var quizID: UUID
+    var quizID: Int
     var userID: UUID
     var answer: String
 }

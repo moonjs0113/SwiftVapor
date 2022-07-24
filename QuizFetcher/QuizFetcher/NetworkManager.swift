@@ -104,7 +104,7 @@ actor NetworkManager {
     }
     
     // MARK: - Today Quiz
-    func requestTodayQuiz() async throws -> [QuizDTO] {
+    func requestTodayQuiz() async throws -> [TodayQuiz] {
         guard let url = URL(string: baseURLString + "/quiz/todayQuiz") else {
             throw NetworkError.invaildURL
         }
@@ -115,7 +115,7 @@ actor NetworkManager {
         
         let (data, _) = try await URLSession.shared.data(for: request)
         do {
-            return try JSONDecoder().decode([QuizDTO].self, from: data)
+            return try JSONDecoder().decode([TodayQuiz].self, from: data)
         } catch {
             throw NetworkError.jsonDecoderError
         }

@@ -108,7 +108,7 @@ Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
                 try await NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
 
 //                 9. Quiz 테이블에 isPublished 업데이트
-//                try await NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
+                try await NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
             }
             print("Finish!")
         } catch(let e as NetworkError) {

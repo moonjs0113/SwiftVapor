@@ -164,31 +164,33 @@ struct QuizController: RouteCollection {
             .all()
     }
     
-//    func solveResult(req: Request) throws -> EventLoopFuture<Int> {
-//        guard let bodyData = req.body.data else {
-//            throw Abort(.badRequest, reason: "Require Body")
-//        }
-//
-//        let solveQuiz = try JSONDecoder().decode(SolveQuiz.self, from: bodyData)
-//
-//        let quiz = Quiz.find(solveQuiz.quizID, on: req.db)
-//        let rightAnswer = try quiz.wait()?.rightAnswer
-//
-//        var exp = (rightAnswer == solveQuiz.answer) ? 20 : 10
-//        if let publishedDate = try quiz.wait()?.publishedDate {
-//            if publishedDate < Date.now {
-//                exp -= 5
-//            }
-//        }
-//
-//        //DB 업데이트 필요
-//        return QuizUser.find(solveQuiz.userID, on: req.db)
-//            .unwrap(or: Abort(.notFound))
-//            .map { user in
-//                user.exp += exp
-//                return user.exp
-//            }
-//    }
+    func solveResult(req: Request) throws -> EventLoopFuture<Int> {
+        guard let bodyData = req.body.data else {
+            throw Abort(.badRequest, reason: "Require Body")
+        }
+
+        let solveQuiz = try JSONDecoder().decode(SolveQuiz.self, from: bodyData)
+        var exp = 0
+        return Quiz.query(on: req.db)
+            .filter(\.$quizID == solveQuiz.quizID)
+            .all()
+            .mapEach { quiz in
+                exp = (quiz.rightAnswer == solveQuiz.answer) ? 20 : 10
+                if let publishedDate = quiz.publishedDate {
+                    if publishedDate < Date.now {
+                        exp -= 5
+                    }
+                }
+                QuizUser.query(on: req.db)
+                    .filter(\.$id == solveQuiz.userID)
+                    .all()
+                    .mapEach {
+                        $0.exp += exp
+                        $0.update(on: req.db)
+                    }
+            }
+            .transform(to: exp)
+    }
     
 //    func history(req: Request) throws -> EventLoopFuture<[QuizHistory]> {
 //        guard let bodyData = req.body.data else {
