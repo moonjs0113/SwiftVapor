@@ -13,7 +13,7 @@ struct QuizController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let quiz = routes.grouped("quiz")
         // External Response
-//        quiz.get("firstUserToken", use: firstUserToken)
+        quiz.get("firstUserToken", use: firstUserToken)
         quiz.get("todayQuiz", use: todayQuiz)
 //        quiz.post("submitAnswer", use: solveResult)
         //        quiz.post("history", use: history)
@@ -37,12 +37,6 @@ struct QuizController: RouteCollection {
     
     // MARK: - USER
     // User
-//    func firstUserToken(req: Request) throws -> EventLoopFuture<QuizUser> {
-//        let quizUser = QuizUser(exp: 0)
-//        return quizUser.create(on: req.db).map{ quizUser }
-//    }
-    
-    
     func deleteUser(req: Request) throws -> EventLoopFuture<HTTPStatus> {
         return QuizUser.find(req.parameters.get("id"), on: req.db)
             .unwrap(or: Abort(.notFound))
@@ -85,7 +79,7 @@ struct QuizController: RouteCollection {
     }
     
     func allQuiz(req: Request) throws -> EventLoopFuture<[Quiz]> {
-        return Quiz.query(on: req.db).sort(\.$id).all()
+        return Quiz.query(on: req.db).sort(\.$quizID).all()
     }
     
     // Update
@@ -111,6 +105,11 @@ struct QuizController: RouteCollection {
     
     
     // MARK: - Function
+    func firstUserToken(req: Request) throws -> EventLoopFuture<QuizUser> {
+        let quizUser = QuizUser(exp: 0)
+        return quizUser.create(on: req.db).map{ quizUser }
+    }
+    
     func todayQuiz(req: Request) throws -> EventLoopFuture<[Quiz]> {
         return Quiz.query(on: req.db)
             .filter(\.$isPublished == false)

@@ -9,9 +9,14 @@ import FluentKit
 
 struct QuizUserMigration: Migration {
     func prepare(on database: Database) -> EventLoopFuture<Void> {
+        _ = database.enum("quizStatus")
+            .case(QuizStatus.right.rawValue)
+            .case(QuizStatus.wrong.rawValue)
+            .case(QuizStatus.done.rawValue)
+            .create()
+        
         return database.schema(QuizUser.schema)
             .id()
-//            .field("type", .string, .required)
             .field("history", .dictionary)
             .field("exp", .int, .required)
             .create()
@@ -21,7 +26,6 @@ struct QuizUserMigration: Migration {
         return database.schema(QuizUser.schema).delete()
     }
 }
-
 
 //@ID(key: .id)var id: UUID?
 //@Field(key: "history")var history: [Quiz: QuizStatus]

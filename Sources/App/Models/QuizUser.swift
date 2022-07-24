@@ -24,18 +24,18 @@ struct UserHistory: Codable {
     var userID: UUID
 }
 
-final class QuizHistory: Fields {
-    // The pet's name.
-    @Field(key: "quizID")
-    var quizID: String
-
-    // The type of pet.
-    @Enum(key: "quizStatus")
-    var quizStatus: QuizStatus
-
-    // Creates a new, empty Pet.
-    init() { }
-}
+//final class QuizHistory: Fields {
+//    // The pet's name.
+//    @Field(key: "quizID")
+//    var quizID: String
+//
+//    // The type of pet.
+//    @Enum(key: "quizStatus")
+//    var quizStatus: QuizStatus
+//
+//    // Creates a new, empty Pet.
+//    init() { }
+//}
 
 final class QuizUser: Model, Content {
     static let schema = "quizUser"
@@ -45,8 +45,8 @@ final class QuizUser: Model, Content {
     var id: UUID?
     
     /// QuizUser의 History
-    @Group(key: "history")
-    var history: QuizHistory
+    @Field(key: "history")
+    var history: [Quiz: QuizStatus]
     
     /// QuizUser의 Exp
     @Field(key: "exp")
@@ -56,7 +56,7 @@ final class QuizUser: Model, Content {
         
     }
 
-    init(id: UUID? = nil, history: QuizHistory, exp: Int = 0) {
+    init(id: UUID? = nil, history: [Quiz: QuizStatus] = [:], exp: Int = 0) {
         self.id = id
         self.history = history
         self.exp = exp
