@@ -16,6 +16,7 @@ struct QuizMigration: Migration {
         
         return database.schema(Quiz.schema)
             .id()
+            .field("quizID", .string, .required)
             .field("type", .string, .required)
             .field("question", .string, .required)
             .field("rightAnswer", .string, .required)
