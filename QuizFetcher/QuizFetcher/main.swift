@@ -61,6 +61,9 @@ Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
             let sheetQuiz = try await requestJSONDataFromSheets()
 
             // 3. 시트 문제랑 비교해서
+            
+            print(allQuiz.count, sheetQuiz.count)
+            
             if allQuiz.count < sheetQuiz.count {
                 for i in allQuiz.count...sheetQuiz.count-1 {
                     // 3-1. 새로운 문제를 서버에 업로드한다.
@@ -70,6 +73,7 @@ Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
                 allQuiz = try await NetworkManager.shared.requestAllQuiz()
             }
             
+            print("4. 어제의 퀴즈를 가져온다.")
             // 4. 어제의 퀴즈를 가져온다.
             let yesterDayQuiz = try await NetworkManager.shared.requestTodayQuiz()
             
@@ -81,9 +85,13 @@ Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
 //            }
             
             // 6-1. 출제가 안된 문제들
+            
             let notPublishedQuiz = allQuiz.filter { quiz in
-                !quiz.isPublished
+                print(quiz.isPublished)
+                return !quiz.isPublished
             }
+            
+            print(notPublishedQuiz.count)
             
             // 6-2. 3문제 이상이 안 되면 에러
             if notPublishedQuiz.count < 3 {
@@ -95,6 +103,7 @@ Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
             
             for todayQuiz in notPublishedQuiz[0...2] {
                 // 8. 오늘의 문제 등록
+                print(todayQuiz)
                 try await NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
 
                 // 9. Quiz 테이블에 isPublished 업데이트

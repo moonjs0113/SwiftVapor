@@ -14,7 +14,7 @@ struct TodayQuizMigration: Migration {
 //            .case(QuizType.choice.rawValue)
 //            .create()
         
-        return database.schema(Quiz.schema)
+        return database.schema(TodayQuiz.schema)
             .id()
             .field("quizID", .int, .required)
             .field("type", .string, .required)
