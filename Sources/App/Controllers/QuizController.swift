@@ -13,7 +13,7 @@ struct QuizController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let quiz = routes.grouped("quiz")
         // External Response
-        quiz.get("firstUserToken", use: firstUserToken)
+//        quiz.get("firstUserToken", use: firstUserToken)
         quiz.get("todayQuiz", use: todayQuiz)
 //        quiz.post("submitAnswer", use: solveResult)
         //        quiz.post("history", use: history)
@@ -37,10 +37,10 @@ struct QuizController: RouteCollection {
     
     // MARK: - USER
     // User
-    func firstUserToken(req: Request) throws -> EventLoopFuture<QuizUser> {
-        let quizUser = QuizUser(exp: 0)
-        return quizUser.create(on: req.db).map{ quizUser }
-    }
+//    func firstUserToken(req: Request) throws -> EventLoopFuture<QuizUser> {
+//        let quizUser = QuizUser(exp: 0)
+//        return quizUser.create(on: req.db).map{ quizUser }
+//    }
     
     
     func deleteUser(req: Request) throws -> EventLoopFuture<HTTPStatus> {
@@ -144,17 +144,17 @@ struct QuizController: RouteCollection {
 //            }
 //    }
     
-    func history(req: Request) throws -> EventLoopFuture<[QuizHistory]> {
-        guard let bodyData = req.body.data else {
-            throw Abort(.badRequest, reason: "Require Body")
-        }
-        
-        let quizUserID = try JSONDecoder().decode(UserHistory.self, from: bodyData)
-        
-        return QuizUser.query(on: req.db)
-            .filter(\.$id == quizUserID.userID)
-            .first()
-            .unwrap(or: Abort(.notFound))
-            .map { $0.history }
-    }
+//    func history(req: Request) throws -> EventLoopFuture<[QuizHistory]> {
+//        guard let bodyData = req.body.data else {
+//            throw Abort(.badRequest, reason: "Require Body")
+//        }
+//
+//        let quizUserID = try JSONDecoder().decode(UserHistory.self, from: bodyData)
+//
+//        return QuizUser.query(on: req.db)
+//            .filter(\.$id == quizUserID.userID)
+//            .first()
+//            .unwrap(or: Abort(.notFound))
+//            .map { $0.history }
+//    }
 }
