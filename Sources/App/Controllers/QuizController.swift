@@ -177,9 +177,23 @@ struct QuizController: RouteCollection {
             .mapEach { quiz in
                 exp = (quiz.rightAnswer == solveQuiz.answer) ? 20 : 10
                 if let publishedDate = quiz.publishedDate {
-                    if publishedDate < Date.now {
-                        exp -= 5
+                    
+//                    let myDateComponents = DateComponents(year: 2022, month: 3, day: 01)
+//                    let startDate = Calendar.current.date(from: myDateComponents)!
+                    
+                    let offsetComps = Calendar.current.dateComponents([.day], from: publishedDate, to: Date())
+                    
+                    if case let (d?) = (offsetComps.day) {
+//                        print("\(d)일 만큼 차이남")
+                        if d > 0 {
+                            exp -= 5
+                        }
                     }
+                    
+//                    publishedDate.compare(Date()).
+//                    if publishedDate < Date() {
+//                        exp -= 5
+//                    }
                 }
                 QuizUser.query(on: req.db)
                     .filter(\.$id == solveQuiz.userID)
