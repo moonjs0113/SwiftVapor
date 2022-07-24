@@ -32,7 +32,7 @@ final class Quiz: Model, Content, Hashable {
     var quizID: String
     
     /// 문제의 유형
-    @Field(key: "type")
+    @Enum(key: "type")
     var type: QuizType
     
     /// 문제
