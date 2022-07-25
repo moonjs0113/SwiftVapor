@@ -29,28 +29,36 @@ enum HTTPMethod: String {
     case DELETE
 }
 
-actor NetworkManager {
+class NetworkManager {
     static let shared: NetworkManager = NetworkManager()
     
     let baseURLString: String = "http://ec2-3-237-49-198.compute-1.amazonaws.com"
     
     // MARK: - Quiz
-    func requestAllQuiz() async throws -> [QuizDTO] {
+    func requestAllQuiz(complete: @escaping ([QuizDTO]) -> ()) {
         guard let url = URL(string: baseURLString + "/quiz/allQuiz") else {
-            throw NetworkError.invaildURL
+            return
+//            throw NetworkError.invaildURL
         }
         
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpMethod = HTTPMethod.GET.rawValue
         
-        let (data, _) = try await URLSession.shared.data(for: request)
-        return try JSONDecoder().decode([QuizDTO].self, from: data)
+        URLSession.shared.dataTask(with: request) { data, _, _ in
+            if let data = data {
+                if let quizDTOLiSt = try? JSONDecoder().decode([QuizDTO].self, from: data) {
+                    complete(quizDTOLiSt)
+                }
+            }
+        }
+        .resume()
     }
     
-    func registerQuiz(quiz: Quiz) async throws {
+    func registerQuiz(quiz: Quiz) {
         guard let url = URL(string: baseURLString + "/quiz/register") else {
-            throw NetworkError.invaildURL
+//            throw NetworkError.invaildURL
+            return
         }
         
         var request = URLRequest(url: url)
@@ -61,11 +69,13 @@ actor NetworkManager {
         do {
             request.httpBody = try JSONEncoder().encode(quizDTO)
         } catch {
-            throw NetworkError.jsonEncoderError
+//            throw NetworkError.jsonEncoderError
+            return
         }
-        do {
-            let (_, _) = try await URLSession.shared.data(for: request)
-        } catch { throw NetworkError.requestError }
+        URLSession.shared.dataTask(with: request).resume()
+//        do {
+//            let (_, _) = try await URLSession.shared.data(for: request)
+//        } catch { throw NetworkError.requestError }
     }
     
     func requestNotPublishedQuiz(completeHandler: @escaping ([QuizDTO]) -> ()) {
@@ -125,9 +135,10 @@ actor NetworkManager {
         }
     }
     
-    func registerTodayQuiz(quiz: QuizDTO) async throws {
+    func registerTodayQuiz(quiz: QuizDTO) {
         guard let url = URL(string: baseURLString + "/quiz/registerTodayQuiz") else {
-            throw NetworkError.invaildURL
+//            throw NetworkError.invaildURL
+            return
         }
         
         var request = URLRequest(url: url)
@@ -138,16 +149,19 @@ actor NetworkManager {
         do {
             request.httpBody = try JSONEncoder().encode(quiz)
         } catch {
-            throw NetworkError.jsonEncoderError
+//            throw NetworkError.jsonEncoderError
+            return
         }
-        do {
-            let (_, _) = try await URLSession.shared.data(for: request)
-        } catch { throw NetworkError.requestError }
+        URLSession.shared.dataTask(with: request).resume()
+//        do {
+//            let (_, _) = try await URLSession.shared.data(for: request)
+//        } catch { throw NetworkError.requestError }
     }
     
-    func updateTodayQuiz(quiz: QuizDTO) async throws {
+    func updateTodayQuiz(quiz: QuizDTO){
         guard let url = URL(string: baseURLString + "/quiz/updateTodayQuiz") else {
-            throw NetworkError.invaildURL
+//            throw NetworkError.invaildURL
+            return
         }
         
         var request = URLRequest(url: url)
@@ -158,25 +172,31 @@ actor NetworkManager {
         do {
             request.httpBody = try JSONEncoder().encode(quiz)
         } catch {
-            throw NetworkError.jsonEncoderError
+//            throw NetworkError.jsonEncoderError
+            return
         }
-        do {
-            let (_, _) = try await URLSession.shared.data(for: request)
-        } catch { throw NetworkError.requestError }
+        
+        URLSession.shared.dataTask(with: request).resume()
+        
+//        do {
+//            let (_, _) = try await URLSession.shared.data(for: request)
+//        } catch { throw NetworkError.requestError }
     }
     
-    func deleteTodayQuiz() async throws {
+    func deleteTodayQuiz() { // async throws {
         guard let url = URL(string: baseURLString + "/quiz/todayQuiz") else {
-            throw NetworkError.invaildURL
+//            throw NetworkError.invaildURL
+            return
         }
         
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpMethod = HTTPMethod.DELETE.rawValue
         
-        do {
-            let (_, _) = try await URLSession.shared.data(for: request)
-        } catch { throw NetworkError.requestError }
+        URLSession.shared.dataTask(with: request).resume()
+//        do {
+//            let (_, _) = try await URLSession.shared.data(for: request)
+//        } catch { throw NetworkError.requestError }
     }
     
     func updateUserHistory(quiz: QuizDTO) async throws {
