@@ -8,6 +8,7 @@
 import Foundation
 
 func requestJSONDataFromSheets() async throws -> [Quiz] {
+    
     let urlString = "https://docs.google.com/spreadsheets/d/1YSAsmsb0b3fSXBrPGS8c6Pg15LtgxtvTm9gcNVlESLo/gviz/tq?gid=938396143"
     guard let url = URL(string: urlString) else {
         throw NetworkError.invaildURLString
@@ -51,7 +52,7 @@ func createQuiz(rowValue: [RowValue?]) -> Quiz {
                 example: rowValue[7]?.v ?? "")
 }
 
-Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
+Timer.scheduledTimer(withTimeInterval: 4, repeats: true) { _ in
     Task(priority: .high) {
         do {
             // 1. 모든 문제를 가져온다.

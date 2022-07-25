@@ -138,7 +138,7 @@ struct QuizController: RouteCollection {
             .mapEach {
                 $0.publishedDate = Date()
                 $0.isPublished = true
-                $0.update(on: req.db)
+                _ = $0.update(on: req.db)
             }
             .transform(to: .ok)
         
@@ -177,34 +177,34 @@ struct QuizController: RouteCollection {
             .mapEach { quiz in
                 exp = (quiz.rightAnswer == solveQuiz.answer) ? 20 : 10
                 if let publishedDate = quiz.publishedDate {
-                    
 //                    let myDateComponents = DateComponents(year: 2022, month: 3, day: 01)
 //                    let startDate = Calendar.current.date(from: myDateComponents)!
+//                    let offsetComps = Calendar.current.dateComponents([.day], from: publishedDate, to: Date())
                     
-                    let offsetComps = Calendar.current.dateComponents([.day], from: publishedDate, to: Date())
-                    
-                    if case let (d?) = (offsetComps.day) {
-//                        print("\(d)일 만큼 차이남")
-                        if d > 0 {
-                            exp -= 5
-                        }
+                    if let nowDateInt = Int(self.dateFormatter.string(from: Date())),
+                       let publishedDateInt = Int(self.dateFormatter.string(from: publishedDate)){
+                        exp -= (publishedDateInt < nowDateInt) ? 5 : 0
                     }
-                    
-//                    publishedDate.compare(Date()).
-//                    if publishedDate < Date() {
-//                        exp -= 5
-//                    }
                 }
-                QuizUser.query(on: req.db)
+                _ = QuizUser.query(on: req.db)
                     .filter(\.$id == solveQuiz.userID)
                     .all()
                     .mapEach {
                         $0.exp += exp
-                        $0.update(on: req.db)
+                        _ = $0.update(on: req.db)
                     }
             }
             .transform(to: exp)
     }
+    
+    var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ko")
+        dateFormatter.timeZone = TimeZone(abbreviation: "KST")
+        dateFormatter.dateFormat = "yyyyMMdd"
+        return dateFormatter
+    }
+    
     
 //    func history(req: Request) throws -> EventLoopFuture<[QuizHistory]> {
 //        guard let bodyData = req.body.data else {
