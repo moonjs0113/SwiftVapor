@@ -72,23 +72,23 @@ func quizFetch() {
         if let sheetQuiz = try? requestJSONDataFromSheets() {
             if allQuiz.count < sheetQuiz.count {
                 for i in allQuiz.count...sheetQuiz.count-1 {
+                    print("Register New Quiz ID: \(i)")
                     NetworkManager.shared.registerQuiz(quiz: sheetQuiz[i])
                 }
                 NetworkManager.shared.requestAllQuiz { newAllQuiz in
+                    print("Fetch New Quiz")
                     allQuizList = newAllQuiz
                     let notPublishedQuiz = allQuizList.filter { quiz in
                         return !quiz.isPublished
                     }
                     
                     if notPublishedQuiz.count < 3 { return }
-
                     NetworkManager.shared.deleteTodayQuiz()
                     
                     for todayQuiz in notPublishedQuiz[0...2] {
                         NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
                         NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
                     }
-                    print("Finish!")
                 }
             } else {
                 let notPublishedQuiz = allQuizList.filter { quiz in
@@ -102,15 +102,17 @@ func quizFetch() {
                     NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
                     NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
                 }
-                print("Finish!")
+                
             }
+            print("Replace Today Quiz")
         }
     }
 }
 
 var SAVED_DATA_INT = -1
 
-Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
+Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
+    print("[Fetch]: \(Date())")
     let nowDateInt = Int(dateFormatter.string(from: Date())) ?? 0
     if nowDateInt > SAVED_DATA_INT {
         quizFetch()
