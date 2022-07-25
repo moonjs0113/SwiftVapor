@@ -68,66 +68,43 @@ func quizFetch() {
     // 1. 모든 문제를 가져온다.
     var allQuizList: [QuizDTO] = []
     NetworkManager.shared.requestAllQuiz { allQuiz in
-//        var allQuiz = try await NetworkManager.shared.requestAllQuiz()
-        // 2. 시트 문제를 가져온다.
         allQuizList = allQuiz
-        var sheetQuiz: [Quiz] = []
-        do {
-            sheetQuiz = try requestJSONDataFromSheets()
-        } catch { return }
-        
-        // 3. 시트 문제랑 비교해서
-//        print(allQuiz.count, sheetQuiz.count)
-        
-        if allQuiz.count < sheetQuiz.count {
-            for i in allQuiz.count...sheetQuiz.count-1 {
-                // 3-1. 새로운 문제를 서버에 업로드한다.
-                NetworkManager.shared.registerQuiz(quiz: sheetQuiz[i])
-            }
-            // 3-2. 모든 문제를 업데이트한다.
-            NetworkManager.shared.requestAllQuiz { newAllQuiz in
-                allQuizList = newAllQuiz
-            }
-        }
-        
-        // 4. 어제의 퀴즈를 가져온다.
-    //    let yesterDayQuiz = try await NetworkManager.shared.requestTodayQuiz()
-    //    print(yesterDayQuiz)
-        
-        // MARK: - Current
-        
-        // 5. 어제 문제를 User history에 추가
-    //            for quiz in yesterDayQuiz {
-    //                try await NetworkManager.shared.updateUserHistory(quiz: quiz)
-    //            }
-        
-        // 6-1. 출제가 안된 문제들
-        
-        let notPublishedQuiz = allQuizList.filter { quiz in
-    //        print(quiz.isPublished)
-            return !quiz.isPublished
-        }
-        
-    //    print(notPublishedQuiz.count)
-        
-        // 6-2. 3문제 이상이 안 되면 에러
-        if notPublishedQuiz.count < 3 {
-            return
-//            throw NetworkError.notEnoughQuiz
-        }
+        if let sheetQuiz = try? requestJSONDataFromSheets() {
+            if allQuiz.count < sheetQuiz.count {
+                for i in allQuiz.count...sheetQuiz.count-1 {
+                    NetworkManager.shared.registerQuiz(quiz: sheetQuiz[i])
+                }
+                NetworkManager.shared.requestAllQuiz { newAllQuiz in
+                    allQuizList = newAllQuiz
+                    let notPublishedQuiz = allQuizList.filter { quiz in
+                        return !quiz.isPublished
+                    }
+                    
+                    if notPublishedQuiz.count < 3 { return }
 
-        // 7. 기존 오늘의 문제 삭제
-        NetworkManager.shared.deleteTodayQuiz()
-        
-        for todayQuiz in notPublishedQuiz[0...2] {
-    //                 8. 오늘의 문제 등록
-    //        print(todayQuiz)
-            NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
+                    NetworkManager.shared.deleteTodayQuiz()
+                    
+                    for todayQuiz in notPublishedQuiz[0...2] {
+                        NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
+                        NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
+                    }
+                    print("Finish!")
+                }
+            } else {
+                let notPublishedQuiz = allQuizList.filter { quiz in
+                    return !quiz.isPublished
+                }
+                
+                if notPublishedQuiz.count < 3 { return }
 
-    //                 9. Quiz 테이블에 isPublished 업데이트
-            NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
+                NetworkManager.shared.deleteTodayQuiz()
+                for todayQuiz in notPublishedQuiz[0...2] {
+                    NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
+                    NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
+                }
+                print("Finish!")
+            }
         }
-        print("Finish!")
     }
 }
 
