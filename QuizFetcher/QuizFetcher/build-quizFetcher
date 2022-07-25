@@ -1,4 +1,3 @@
-#! /bin/zsh
 
 rm QuizFetcher
 swiftc * -o QuizFetcher
