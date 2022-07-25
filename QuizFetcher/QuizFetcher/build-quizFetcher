@@ -1,6 +1,8 @@
 clear
-
+git pull origin main
+clear
 rm QuizFetcher
 swiftc -v *.swift -o QuizFetcher
+clear
 ./QuizFetcher
 
