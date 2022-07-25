@@ -118,22 +118,22 @@ class NetworkManager {
     }
     
     // MARK: - Today Quiz
-    func requestTodayQuiz() async throws -> [TodayQuiz] {
-        guard let url = URL(string: baseURLString + "/quiz/todayQuiz") else {
-            throw NetworkError.invaildURL
-        }
-        
-        var request = URLRequest(url: url)
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpMethod = HTTPMethod.GET.rawValue
-        
-        let (data, _) = try await URLSession.shared.data(for: request)
-        do {
-            return try JSONDecoder().decode([TodayQuiz].self, from: data)
-        } catch {
-            throw NetworkError.jsonDecoderError
-        }
-    }
+//    func requestTodayQuiz() async throws -> [TodayQuiz] {
+//        guard let url = URL(string: baseURLString + "/quiz/todayQuiz") else {
+//            throw NetworkError.invaildURL
+//        }
+//
+//        var request = URLRequest(url: url)
+//        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//        request.httpMethod = HTTPMethod.GET.rawValue
+//
+//        let (data, _) = try await URLSession.shared.data(for: request)
+//        do {
+//            return try JSONDecoder().decode([TodayQuiz].self, from: data)
+//        } catch {
+//            throw NetworkError.jsonDecoderError
+//        }
+//    }
     
     func registerTodayQuiz(quiz: QuizDTO) {
         guard let url = URL(string: baseURLString + "/quiz/registerTodayQuiz") else {
@@ -199,23 +199,23 @@ class NetworkManager {
 //        } catch { throw NetworkError.requestError }
     }
     
-    func updateUserHistory(quiz: QuizDTO) async throws {
-        guard let url = URL(string: baseURLString + "/quiz/updateUserHistory") else {
-            throw NetworkError.invaildURL
-        }
-        
-        var request = URLRequest(url: url)
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpMethod = HTTPMethod.POST.rawValue
-        
-//        let quizDTO: QuizDTO = QuizDTO(quiz: quiz)
-        do {
-            request.httpBody = try JSONEncoder().encode(quiz)
-        } catch {
-            throw NetworkError.jsonEncoderError
-        }
-        do {
-            let (_, _): (Data, URLResponse) = try await URLSession.shared.data(for: request)
-        } catch { throw NetworkError.requestError }
-    }
+//    func updateUserHistory(quiz: QuizDTO) async throws {
+//        guard let url = URL(string: baseURLString + "/quiz/updateUserHistory") else {
+//            throw NetworkError.invaildURL
+//        }
+//        
+//        var request = URLRequest(url: url)
+//        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//        request.httpMethod = HTTPMethod.POST.rawValue
+//        
+////        let quizDTO: QuizDTO = QuizDTO(quiz: quiz)
+//        do {
+//            request.httpBody = try JSONEncoder().encode(quiz)
+//        } catch {
+//            throw NetworkError.jsonEncoderError
+//        }
+//        do {
+//            let (_, _): (Data, URLResponse) = try await URLSession.shared.data(for: request)
+//        } catch { throw NetworkError.requestError }
+//    }
 }
