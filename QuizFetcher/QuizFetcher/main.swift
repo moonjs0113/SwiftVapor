@@ -119,7 +119,7 @@ func quizFetch() async throws {
     print("Finish!")
 }
 
-var savedDataInt = 0
+var savedDataInt = -1
 
 Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
     Task(priority: .high) {
@@ -127,7 +127,7 @@ Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
             let nowDateInt = Int(dateFormatter.string(from: Date())) ?? 0
             if nowDateInt > savedDataInt {
                 try await quizFetch()
-                savedDataInt = Int(dateFormatter.string(from: Date())) ?? 0
+                savedDataInt = Int(dateFormatter.string(from: Date())) ?? -1
             }
         } catch(let e as NetworkError) {
             print(e)
