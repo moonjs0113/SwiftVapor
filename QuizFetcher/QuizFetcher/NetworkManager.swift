@@ -195,7 +195,7 @@ actor NetworkManager {
             throw NetworkError.jsonEncoderError
         }
         do {
-            let (_, _) = try await URLSession.shared.data(for: request)
+            let (_, _): (Data, URLResponse) = try await URLSession.shared.data(for: request)
         } catch { throw NetworkError.requestError }
     }
 }
