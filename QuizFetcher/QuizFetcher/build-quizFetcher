@@ -1,5 +1,5 @@
 
 rm QuizFetcher
-swiftc * -o QuizFetcher
+swiftc -v * -o QuizFetcher
 ./QuizFetcher
 
