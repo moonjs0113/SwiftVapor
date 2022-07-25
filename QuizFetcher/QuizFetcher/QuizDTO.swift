@@ -17,7 +17,7 @@ struct QuizDTO: Codable {
     var example: [String]
     
     
-    var publishedDate: Date?
+    var publishedDate: String?
     var isPublished: Bool = false
     
 //    var exmpleList: [String] {
