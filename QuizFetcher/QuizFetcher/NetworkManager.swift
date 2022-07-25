@@ -51,7 +51,11 @@ class NetworkManager {
             if let data = data {
                 if let quizDTOLiSt = try? JSONDecoder().decode([QuizDTO].self, from: data) {
                     complete(quizDTOLiSt)
+                } else {
+                    print("[Error]: \(NetworkError.jsonDecoderError)")
                 }
+            } else {
+                print("[Error]: \(NetworkError.nilResponse)")
             }
         }
         .resume()

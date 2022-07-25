@@ -117,9 +117,10 @@ var SAVED_DATA_INT = -1
 Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
     
     let nowDateInt = Int(dateFormatter.string(from: Date())) ?? 0
-    print("[Info]: Try Fetch Current \(Date()) (value: \(nowDateInt))")
+    print("[Info]: Current Date Value:  \(Date()) (value: \(nowDateInt))")
     print("[Info]: Save Date Value: \(SAVED_DATA_INT)")
     if nowDateInt > SAVED_DATA_INT {
+        print("[Info]: Try Fetch")
         quizFetch()
         SAVED_DATA_INT = Int(dateFormatter.string(from: Date())) ?? -1
     }
