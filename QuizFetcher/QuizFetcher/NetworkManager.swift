@@ -38,7 +38,7 @@ class NetworkManager {
     // MARK: - Quiz
     func requestAllQuiz(complete: @escaping ([QuizDTO]) -> ()) {
         guard let url = URL(string: baseURLString + "/quiz/allQuiz") else {
-            print("[Error]: \(NetworkError.invaildURL)")
+            print("[Error]: \(NetworkError.invaildURL) \(#function)")
             return
 //            throw NetworkError.invaildURL
         }
@@ -52,10 +52,10 @@ class NetworkManager {
                 if let quizDTOLiSt = try? JSONDecoder().decode([QuizDTO].self, from: data) {
                     complete(quizDTOLiSt)
                 } else {
-                    print("[Error]: \(NetworkError.jsonDecoderError)")
+                    print("[Error]: \(NetworkError.jsonDecoderError) \(#function)")
                 }
             } else {
-                print("[Error]: \(NetworkError.nilResponse)")
+                print("[Error]: \(NetworkError.nilResponse) \(#function)")
             }
         }
         .resume()
@@ -76,7 +76,7 @@ class NetworkManager {
         do {
             request.httpBody = try JSONEncoder().encode(quizDTO)
         } catch {
-            print("[Error]: \(NetworkError.jsonEncoderError)")
+            print("[Error]: \(NetworkError.jsonEncoderError) \(#function)")
 //            throw NetworkError.jsonEncoderError
             return
         }
@@ -88,7 +88,7 @@ class NetworkManager {
     
     func requestNotPublishedQuiz(completeHandler: @escaping ([QuizDTO]) -> ()) {
         guard let url = URL(string: baseURLString + "/quiz/allQuiz") else {
-            print("[Error]: \(NetworkError.invaildURL)")
+            print("[Error]: \(NetworkError.invaildURL) \(#function)")
             return
         }
         
@@ -147,7 +147,7 @@ class NetworkManager {
     
     func registerTodayQuiz(quiz: QuizDTO) {
         guard let url = URL(string: baseURLString + "/quiz/registerTodayQuiz") else {
-            print("[Error]: \(NetworkError.invaildURL)")
+            print("[Error]: \(NetworkError.invaildURL) \(#function)")
 //            throw NetworkError.invaildURL
             return
         }
@@ -160,7 +160,7 @@ class NetworkManager {
         do {
             request.httpBody = try JSONEncoder().encode(quiz)
         } catch {
-            print("[Error]: \(NetworkError.jsonEncoderError)")
+            print("[Error]: \(NetworkError.jsonEncoderError) \(#function)")
 //            throw NetworkError.jsonEncoderError
             return
         }
@@ -172,7 +172,7 @@ class NetworkManager {
     
     func updateTodayQuiz(quiz: QuizDTO){
         guard let url = URL(string: baseURLString + "/quiz/updateTodayQuiz") else {
-            print("[Error]: \(NetworkError.invaildURL)")
+            print("[Error]: \(NetworkError.invaildURL) \(#function)")
 //            throw NetworkError.invaildURL
             return
         }
@@ -185,7 +185,7 @@ class NetworkManager {
         do {
             request.httpBody = try JSONEncoder().encode(quiz)
         } catch {
-            print("[Error]: \(NetworkError.jsonEncoderError)")
+            print("[Error]: \(NetworkError.jsonEncoderError) \(#function)")
 //            throw NetworkError.jsonEncoderError
             return
         }
@@ -199,7 +199,7 @@ class NetworkManager {
     
     func deleteTodayQuiz() { // async throws {
         guard let url = URL(string: baseURLString + "/quiz/todayQuiz") else {
-            print("[Error]: \(NetworkError.invaildURL)")
+            print("[Error]: \(NetworkError.invaildURL) \(#function)")
 //            throw NetworkError.invaildURL
             return
         }
