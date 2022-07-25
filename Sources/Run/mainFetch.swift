@@ -123,23 +123,26 @@ func quizFetch() async throws {
     print("Finish!")
 }
 
-var savedDataInt = -1
+var SAVED_DATA_INT = -1
 
-Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
-    Task(priority: .high) {
-        do {
-            let nowDateInt = Int(dateFormatter.string(from: Date())) ?? 0
-            if nowDateInt > savedDataInt {
-                try await quizFetch()
-                savedDataInt = Int(dateFormatter.string(from: Date())) ?? -1
+func runFetch() {
+    Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
+        Task(priority: .high) {
+            do {
+                let nowDateInt = Int(dateFormatter.string(from: Date())) ?? 0
+                if nowDateInt > SAVED_DATA_INT {
+                    try await quizFetch()
+                    SAVED_DATA_INT = Int(dateFormatter.string(from: Date())) ?? -1
+                }
+            } catch(let e as NetworkError) {
+                print(e)
             }
-        } catch(let e as NetworkError) {
-            print(e)
         }
     }
-}
 
 
-while true {
-    RunLoop.current.run(until: Date().addingTimeInterval(0.1))
+    while true {
+        RunLoop.current.run(until: Date().addingTimeInterval(0.1))
+    }
+
 }
