@@ -208,7 +208,7 @@ class NetworkManager {
 //        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 //        request.httpMethod = HTTPMethod.POST.rawValue
 //
-////        let quizDTO: QuizDTO = QuizDTO(quiz: quiz)
+//        let quizDTO: QuizDTO = QuizDTO(quiz: quiz)
 //        do {
 //            request.httpBody = try JSONEncoder().encode(quiz)
 //        } catch {
