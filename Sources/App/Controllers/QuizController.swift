@@ -18,7 +18,6 @@ struct QuizController: RouteCollection {
         quiz.post("submitAnswer", use: solveResult)
         //        quiz.post("history", use: history)
         
-        
         // Internal Response
         // Quiz
         quiz.get("allQuiz", use: allQuiz)
