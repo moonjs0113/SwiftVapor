@@ -32,7 +32,8 @@ enum HTTPMethod: String {
 class NetworkManager {
     static let shared: NetworkManager = NetworkManager()
     
-    let baseURLString: String = "http://ec2-3-237-49-198.compute-1.amazonaws.com"
+    let baseURLString: String = "http://127.0.0.1:8080"
+    //"http://ec2-3-237-49-198.compute-1.amazonaws.com"
     
     // MARK: - Quiz
     func requestAllQuiz(complete: @escaping ([QuizDTO]) -> ()) {

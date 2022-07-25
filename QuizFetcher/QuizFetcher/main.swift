@@ -68,6 +68,7 @@ func quizFetch() {
     // 1. 모든 문제를 가져온다.
     var allQuizList: [QuizDTO] = []
     NetworkManager.shared.requestAllQuiz { allQuiz in
+        print("[Info]: Request All Quiz")
         allQuizList = allQuiz
         if let sheetQuiz = try? requestJSONDataFromSheets() {
             print("[Success]: Complete Load Sheet Data")
