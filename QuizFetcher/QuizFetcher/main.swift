@@ -70,6 +70,7 @@ func quizFetch() {
     NetworkManager.shared.requestAllQuiz { allQuiz in
         allQuizList = allQuiz
         if let sheetQuiz = try? requestJSONDataFromSheets() {
+            print("[Success]: Complete Load Sheet Data")
             if allQuiz.count < sheetQuiz.count {
                 for i in allQuiz.count...sheetQuiz.count-1 {
                     print("Register New Quiz ID: \(i)")
@@ -102,9 +103,10 @@ func quizFetch() {
                     NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
                     NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
                 }
-                
             }
             print("Replace Today Quiz")
+        } else {
+            print("[Error]: Fail Get Sheet Data")
         }
     }
 }
