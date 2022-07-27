@@ -88,6 +88,24 @@ sudo systemctl restart nginx
 
 ```
 
+## Usage Screen 
+```
+// Screen 생성
+screen -S {SCREEN_NAME}
+
+// 스크린 목록
+screen -ls
+
+// 여기에 Attached라고 되어 있는 것이 현재 screen.
+// 전부 detached라고 나오면 스크린 상태가 아님.
+
+// 스크린 나오기
+// ^+A, d ; detach. 작업중인 것은 백그라운드로 계속 돌아간다.
+
+// 스크린 재접속
+// screen -r {SCREEN_NAME}
+```
+
 ## postgreSQL
 
 ubuntu - password
