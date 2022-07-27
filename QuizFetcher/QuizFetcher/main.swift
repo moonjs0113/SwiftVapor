@@ -39,8 +39,10 @@ func requestJSONDataFromSheets() throws -> [Quiz] {
     var quizList: [Quiz] = []
     
     for row in sheet.table.rows {
-        let quiz = createQuiz(rowValue: row.c)
-        quizList.append(quiz)
+        if row.c[0] != nil {
+            let quiz = createQuiz(rowValue: row.c)
+            quizList.append(quiz)
+        }
     }
     
     return quizList
@@ -66,7 +68,7 @@ var dateFormatter: DateFormatter {
 
 func quizFetch() {
     // 1. 모든 문제를 가져온다.
-    var allQuizList: [QuizDTO?] = []
+    var allQuizList: [QuizDTO] = []
     NetworkManager.shared.requestAllQuiz { allQuiz in
         print("[Info]: Request All Quiz")
         allQuizList = allQuiz
@@ -82,38 +84,28 @@ func quizFetch() {
                     print("Fetch New Quiz")
                     allQuizList = newAllQuiz
                     let notPublishedQuiz = allQuizList.filter { quiz in
-                        if let quiz = quiz {
-                            return !quiz.isPublished
-                        }
-                        return false
+                        return !quiz.isPublished
                     }
                     
                     if notPublishedQuiz.count < 3 { return }
                     NetworkManager.shared.deleteTodayQuiz()
                     
                     for todayQuiz in notPublishedQuiz[0...2] {
-                        if let todayQuiz = todayQuiz {
-                            NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
-                            NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
-                        }
+                        NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
+                        NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
                     }
                 }
             } else {
                 let notPublishedQuiz = allQuizList.filter { quiz in
-                    if let quiz = quiz {
-                        return !quiz.isPublished
-                    }
-                    return false
+                    return !quiz.isPublished
                 }
                 
                 if notPublishedQuiz.count < 3 { return }
                 
                 NetworkManager.shared.deleteTodayQuiz()
                 for todayQuiz in notPublishedQuiz[0...2] {
-                    if let todayQuiz = todayQuiz {
-                        NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
-                        NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
-                    }
+                    NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
+                    NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
                 }
             }
             print("Replace Today Quiz")
