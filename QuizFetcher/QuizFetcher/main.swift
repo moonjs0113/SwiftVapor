@@ -12,7 +12,7 @@ import FoundationNetworking
 #endif
 
 func requestJSONDataFromSheets() throws -> [Quiz] {
-    
+    print("[Info]: Try Fetch Sheet Data")
     let urlString = "https://docs.google.com/spreadsheets/d/1YSAsmsb0b3fSXBrPGS8c6Pg15LtgxtvTm9gcNVlESLo/gviz/tq?gid=938396143"
     guard let url = URL(string: urlString) else {
         throw NetworkError.invaildURLString
@@ -70,7 +70,8 @@ func quizFetch() {
     NetworkManager.shared.requestAllQuiz { allQuiz in
         print("[Info]: Request All Quiz")
         allQuizList = allQuiz
-        if let sheetQuiz = try? requestJSONDataFromSheets() {
+        do {
+            let sheetQuiz = try requestJSONDataFromSheets()
             print("[Success]: Complete Load Sheet Data")
             if allQuiz.count < sheetQuiz.count {
                 for i in allQuiz.count...sheetQuiz.count-1 {
@@ -106,7 +107,7 @@ func quizFetch() {
                 }
                 
                 if notPublishedQuiz.count < 3 { return }
-
+                
                 NetworkManager.shared.deleteTodayQuiz()
                 for todayQuiz in notPublishedQuiz[0...2] {
                     if let todayQuiz = todayQuiz {
@@ -116,9 +117,10 @@ func quizFetch() {
                 }
             }
             print("Replace Today Quiz")
-        } else {
-            print("[Error]: Fail Get Sheet Data")
+        } catch(let e) {
+            print("[Error]: Fail Get Sheet Data with \(e as? NetworkError)")
         }
+        
     }
 }
 
