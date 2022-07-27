@@ -66,7 +66,7 @@ var dateFormatter: DateFormatter {
 
 func quizFetch() {
     // 1. 모든 문제를 가져온다.
-    var allQuizList: [QuizDTO] = []
+    var allQuizList: [QuizDTO?] = []
     NetworkManager.shared.requestAllQuiz { allQuiz in
         print("[Info]: Request All Quiz")
         allQuizList = allQuiz
@@ -81,28 +81,38 @@ func quizFetch() {
                     print("Fetch New Quiz")
                     allQuizList = newAllQuiz
                     let notPublishedQuiz = allQuizList.filter { quiz in
-                        return !quiz.isPublished
+                        if let quiz = quiz {
+                            return !quiz.isPublished
+                        }
+                        return false
                     }
                     
                     if notPublishedQuiz.count < 3 { return }
                     NetworkManager.shared.deleteTodayQuiz()
                     
                     for todayQuiz in notPublishedQuiz[0...2] {
-                        NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
-                        NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
+                        if let todayQuiz = todayQuiz {
+                            NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
+                            NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
+                        }
                     }
                 }
             } else {
                 let notPublishedQuiz = allQuizList.filter { quiz in
-                    return !quiz.isPublished
+                    if let quiz = quiz {
+                        return !quiz.isPublished
+                    }
+                    return false
                 }
                 
                 if notPublishedQuiz.count < 3 { return }
 
                 NetworkManager.shared.deleteTodayQuiz()
                 for todayQuiz in notPublishedQuiz[0...2] {
-                    NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
-                    NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
+                    if let todayQuiz = todayQuiz {
+                        NetworkManager.shared.registerTodayQuiz(quiz: todayQuiz)
+                        NetworkManager.shared.updateTodayQuiz(quiz: todayQuiz)
+                    }
                 }
             }
             print("Replace Today Quiz")

@@ -36,7 +36,7 @@ class NetworkManager {
     //"http://ec2-3-237-49-198.compute-1.amazonaws.com"
     
     // MARK: - Quiz
-    func requestAllQuiz(complete: @escaping ([QuizDTO]) -> ()) {
+    func requestAllQuiz(complete: @escaping ([QuizDTO?]) -> ()) {
         guard let url = URL(string: baseURLString + "/quiz/allQuiz") else {
             print("[Error]: \(NetworkError.invaildURL) \(#function)")
             return
@@ -49,7 +49,7 @@ class NetworkManager {
         
         URLSession.shared.dataTask(with: request) { data, _, _ in
             if let data = data {
-                if let quizDTOLiSt = try? JSONDecoder().decode([QuizDTO].self, from: data) {
+                if let quizDTOLiSt = try? JSONDecoder().decode([QuizDTO?].self, from: data) {
                     complete(quizDTOLiSt)
                 } else {
                     print("[Error]: \(NetworkError.jsonDecoderError) \(#function)")
