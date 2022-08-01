@@ -96,8 +96,11 @@ struct QuizController: RouteCollection {
     
     // Read
     func singleQuiz(req: Request) throws -> EventLoopFuture<Quiz> {
-        return Quiz.find(req.parameters.get("id"), on: req.db)
-            .unwrap(or: Abort(.notFound))
+        let quizID = (Int(req.parameters.get("id") ?? "0") ?? 0)
+        return Quiz.query(on: req.db)
+            .filter(\.$quizID == quizID)
+            .first()
+            .unwrap(or: Abort(.custom(code: 404, reasonPhrase: "QuizID Not Found")))
     }
     
     func allQuiz(req: Request) throws -> EventLoopFuture<[Quiz]> {
