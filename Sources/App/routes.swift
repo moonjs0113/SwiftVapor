@@ -17,6 +17,15 @@ func routes(_ app: Application) throws {
         }
     }
     
+    let composers = ["schubert", "tchaikovsky", "bach", "chopin", "beethoven", "mozart"]
+    
+    for composer in composers {
+        app.get("\(composer).mp3") { req -> Response in
+            let directoryURL = DirectoryConfiguration.detect().publicDirectory + "\(composer).mp3"
+            return req.fileio.streamFile(at: directoryURL, mediaType: .multipart)
+        }
+    }
+    
     app.get("testVideo.mp4") { req -> Response in
         let directoryURL = DirectoryConfiguration.detect().publicDirectory + "testVideo.mp4"
         return req.fileio.streamFile(at: directoryURL, mediaType: .multipart)
